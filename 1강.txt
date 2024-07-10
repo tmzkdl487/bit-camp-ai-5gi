@@ -1,34 +1,67 @@
-딕허브?
+깃허브
 
 컴퓨터에 암호를 건다.
 
+<아나콘다 깔 때>
+just me/ 1,2,3 체크 깐다.
+
+vscode 설치
+
 cmd
 
-conda create -n tf210 python==3.9.7 anconda
-
-호칭은 선생님
+conda create -n tf210 python==3.9.7 anconda (가상환경 생성)
 
 <들어갈 때>
-activate tf2010
+activate tf210
 
-<가상환경 나올때>
+<가상환경 나올때 안 쳐도 됨.>
 deactivate
 
 <가상환경 찾아볼 때>
 conda env list
 
-<가상환경 >
-activate base
-
 <tensorflow 깔때>
 pip install tensorflow
+
+(주르륵 깔린다.)
+
+<친다.>
+>>python
+import tensorflow as tf
 
 <tensorflow 깔린지 확인 할 때>
 tf.__version__
 
-슬리퍼 사기
-
-vscode 깔기
-
 정보처리기사 / 빅데이터 분석기사
 
+<D드라이브 만드는 방법>
+윈도우 커서
+diskmgmt.msc
+
+기가바이트 메인보드 드라이버
+--------------------------
+코드
+
+import tensorflow as tf
+print(tf.__version__) # 2.16.2 텐서플로우 최신 버전이였는데 이제 2.7.4버전이다.
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+import numpy as np
+print(tf.version) #2.16.2
+
+#1. 데이터
+x = np.array([1,2,3])
+y = np.array([1,2,3])
+
+#2. 모델구성
+model = Sequential()
+model.add(Dense(1, input_dim=1)) # 인풋 한덩어리, 아웃풋 한덩어리
+
+#3. 컴파일, 훈련
+model.compile(loss='mse', optimizer='adam') #컴퓨터가 알아먹게 컴파일한다.
+model.fit(x, y, epochs=10000)
+
+#4. 평가, 예측
+result = model.predict(np.array([4]))
+print("4의 예측값 : ", result)
