@@ -19,3 +19,5 @@ loss = model.evaluate(x,y)
 print("로스 : ", loss) 
 result = model.predict([1,2,3,4,5,6,7])
 print("7의 예측값 : ", result)
+
+#7의 예측값 :  [[1.004078 ]
