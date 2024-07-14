@@ -1,6 +1,6 @@
-# keras29_ModelCheckPoint1.py 복사
+# keras28_1_save_model.py 복사
 
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense
 
 from sklearn.datasets import load_boston
@@ -23,40 +23,42 @@ scaler = RobustScaler() # MinMaxScaler # StandardScale, MaxAbsScaler
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
 
-#2. 모델구성
-model = Sequential()
-model.add(Dense(32, input_dim=13))    
-model.add(Dense(32, activation='relu'))
-model.add(Dense(16, activation='relu'))
-model.add(Dense(16, activation='relu'))
-model.add(Dense(1))
+# #2. 모델구성
+# model = Sequential()
+# model.add(Dense(32, input_dim=13))    
+# model.add(Dense(32, activation='relu'))
+# model.add(Dense(16, activation='relu'))
+# model.add(Dense(16, activation='relu'))
+# model.add(Dense(1))
 
-#3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam')
+# #3. 컴파일, 훈련
+# model.compile(loss='mse', optimizer='adam')
 
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+# from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
-es = EarlyStopping(
-    monitor= 'val_loss',
-    mode = 'min',
-    patience= 10,
-    verbose= 1,
-    restore_best_weights= True )
+# es = EarlyStopping(
+#     monitor= 'val_loss',
+#     mode = 'min',
+#     patience= 10,
+#     verbose= 1,
+#     restore_best_weights= True )
 
-mcp = ModelCheckpoint( # mcp는 ModelCheckpoint
-    monitor='val_loss',
-    mode='auto',
-    verbose=1,
-    save_best_olny=True, 
-    filepath = './_save/keras29_mcp/keras29_mcp1.hdf5'
-)
+# mcp = ModelCheckpoint( # mcp는 ModelCheckpoint
+#     monitor='val_loss',
+#     mode='auto',
+#     verbose=1,
+#     save_best_olny=True, 
+#     filepath = './_save/keras29_mcp/keras29_mcp1.hdf5'
+# )
 
-start_time = time.time()
+# start_time = time.time()
 
-model.fit(x_train, y_train, epochs=1000, batch_size=16,   # hist는 히스토리를 줄인말이다.
-          verbose=1, callbacks = [es, mcp],
-          )
-end_time = time.time()
+# model.fit(x_train, y_train, epochs=1000, batch_size=16,   # hist는 히스토리를 줄인말이다.
+#           verbose=1, callbacks = [es, mcp],
+#           )
+# end_time = time.time()
+
+model = load_model('./_save/keras29_mcp/keras29_mcp3.hdf5')
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test, verbose=1)
@@ -66,7 +68,7 @@ y_predict = model.predict(x_test)
 from sklearn.metrics import r2_score
 r2 = r2_score(y_test, y_predict)
 print("r2스코어 : ", r2) 
-print("걸린시간 : ", round(end_time - start_time, 2), "초")
+# print("걸린시간 : ", round(end_time - start_time, 2), "초")
 
 # [과제] train_size = 0.7 ~ 0.9 사이 / r2 0.8 -0.1 줄여주심. 0.7 나오게 하기.
 
