@@ -33,7 +33,7 @@ model.compile(loss='mse', optimizer='adam')
 model.fit(x, y, epochs=epochs)
 
 #4. 평가, 예측
-loss = model.evaluate(x,y)
+loss = model.evaluate(x,y)  # 평가하는 것.
 print("==========================")
 print("epochs : ", epochs)
 print("로스 : ", loss)

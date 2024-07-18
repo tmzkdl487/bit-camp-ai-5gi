@@ -2,7 +2,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 import numpy as np
 
-#1. 데이터
+#1. 데이터  # y가 3개인 데이터 
 x = np.array([range(10)])
 y = np.array([[1,2,3,4,5,6,7,8,9,10],
             [10,9,8,7,6,5,4,3,2,1],

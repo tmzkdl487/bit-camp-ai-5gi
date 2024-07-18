@@ -2,7 +2,7 @@ import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
-#1. 데이터
+#1. 데이터  # 메트릭트 해봄.
 x = np.array([[1,2,3,4,5],
               [1.1,1.2,1.3,1.4,1.5]])
 # x = np.array([[1,6],[2,7],[3,8],[4,9],[5,10]])

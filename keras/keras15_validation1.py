@@ -1,3 +1,5 @@
+# keras14_train_test1 카피
+
 import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
@@ -18,7 +20,12 @@ model.add(Dense(1, input_dim=1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
-model.fit(x_train, y_train, epochs=5000, batch_size=1)
+model.fit(x_train, y_train, epochs=100, batch_size=1, verbose=0)    
+# verbose=0은 === 안 나옴./ 1은 디폴트 / 2를 넣으면 =====없음./ ~ 3은 에포만 나옴
+# verbose=0 : 침묵
+# verbose=1 : 디폴트
+# verbose=2 : 프로그래스바 삭제
+# verbose=나머지 : 에포만 나온다.
 
 #.4 평가, 예측
 print("++++++++++++++++++++++++++++++++++++++++++++++++")

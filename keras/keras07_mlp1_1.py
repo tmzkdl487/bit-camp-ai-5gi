@@ -11,7 +11,7 @@ y = np.array([1,2,3,4,5])
 print(x.shape) # (5, 2)
 print(y.shape) # (5,)
 
-#2. 모델
+#2. 모델구성    # 단층 레이어 구성
 model = Sequential()
 model.add(Dense(10, input_dim=2))
 model.add(Dense(10))
