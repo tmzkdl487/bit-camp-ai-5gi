@@ -69,4 +69,3 @@ print(sampleSubmission.shape)   #(10886,)
 sampleSubmission.to_csv(path + "sampleSubmission_0717_1523.csv")
 
 print ("로스는 : ", loss)
-'''
