@@ -1,4 +1,4 @@
-# keras28_2_load_model.py 복사
+# keras28_3_save_model2.py
 
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense
@@ -40,36 +40,39 @@ print(np.min(x_train), np.max(x_train))   # 그래서 다시 찍어봄. 0.0 1.00
 print(np.min(x_test), np.max(x_test))   # -0.008298755186722073 1.1478180091225068 <_ 범위 밖으로 나오는게 맞음.
 
 # #2. 모델구성
-# model = Sequential()
-# # model.add(Dense(1, input_dim=13))
-# model.add(Dense(10, activation='relu', input_dim=13))    # 이미지 input_shape=(8, 8, 1) / input_shape=(13)
-# model.add(Dense(5, activation='relu'))
-# model.add(Dense(1, activation='linear'))
+model = Sequential()
+model.add(Dense(10, input_dim=13))  # 이미지 input_shape=(8, 8, 1) / input_shape=(13)
+model.add(Dense(5))
+model.add(Dense(1))
 
 # model.summary()
 
-# model.save("./_save/keras28_1_save_model.h5")
+model.save_weights("./_save/keras28/keras28_5_save_weights1.h5")
 
-model = load_model("c:/ai5/_save/keras28/keras28_3_save_model.h5")  # ./은 상대경로 , c:은 절대경로
+# model = load_model("./_save/keras28/keras28_1_save_model.h5")
 
-model.summary()
+# model.summary()
 
 #3. 컴파일, 훈련
-# model.compile(loss='mse', optimizer='adam')
-# start_time = time.time()
+model.compile(loss='mse', optimizer='adam')
+start_time = time.time()
 
-# es = EarlyStopping(
-#     monitor= 'val_loss',
-#     mode = 'min',
-#     patience= 0,
-#     restore_best_weights= True
-# )
+es = EarlyStopping(
+    monitor= 'val_loss',
+    mode = 'min',
+    patience= 0,
+    restore_best_weights= True
+)
 
-# model.fit(x_train, y_train, epochs=10, batch_size=16,   # hist는 히스토리를 줄인말이다.
-#           verbose=1, validation_split=0.3,
-#           callbacks = [es]  #얼리스타핑을 콜백한다.
-#           )
-# end_time = time.time()
+model.fit(x_train, y_train, epochs=100, batch_size=16,   # hist는 히스토리를 줄인말이다.
+          verbose=1, validation_split=0.3,
+          callbacks = [es]  #얼리스타핑을 콜백한다.
+          )
+end_time = time.time()
+
+model.save_weights("./_save/keras28/keras28_5_save_weights2.h5")
+
+# model.save("./_save/keras28_3_save_model.h5")
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
@@ -79,7 +82,7 @@ y_predict = model.predict(x_test)
 from sklearn.metrics import r2_score
 r2 = r2_score(y_test, y_predict)
 print("r2스코어 : ", r2) 
-# print("걸린시간 : ", round(end_time - start_time, 2), "초")
+print("걸린시간 : ", round(end_time - start_time, 2), "초")
 
 # [과제] train_size = 0.7 ~ 0.9 사이 / r2 0.8 -0.1 줄여주심. 0.7 나오게 하기.
 

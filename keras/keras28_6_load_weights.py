@@ -1,4 +1,4 @@
-# keras28_2_load_model.py 복사
+# keras28_4_load_model.py 복사
 
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense
@@ -40,22 +40,23 @@ print(np.min(x_train), np.max(x_train))   # 그래서 다시 찍어봄. 0.0 1.00
 print(np.min(x_test), np.max(x_test))   # -0.008298755186722073 1.1478180091225068 <_ 범위 밖으로 나오는게 맞음.
 
 # #2. 모델구성
-# model = Sequential()
-# # model.add(Dense(1, input_dim=13))
-# model.add(Dense(10, activation='relu', input_dim=13))    # 이미지 input_shape=(8, 8, 1) / input_shape=(13)
-# model.add(Dense(5, activation='relu'))
-# model.add(Dense(1, activation='linear'))
+model = Sequential()
+model.add(Dense(10, input_dim=13))
+model.add(Dense(5))
+model.add(Dense(1, activation='linear'))
 
 # model.summary()
 
 # model.save("./_save/keras28_1_save_model.h5")
 
-model = load_model("c:/ai5/_save/keras28/keras28_3_save_model.h5")  # ./은 상대경로 , c:은 절대경로
+# model = load_model("c:/ai5/_save/keras28/keras28_3_save_model.h5")  # ./은 상대경로 , c:은 절대경로
+# model.load_weights("c:/ai5/_save/keras28/keras28_5_save_weights1.h5")   # compile을 해야 나옴.
+model.load_weights("c:/ai5/_save/keras28/keras28_5_save_weights2.h5") 
 
 model.summary()
 
 #3. 컴파일, 훈련
-# model.compile(loss='mse', optimizer='adam')
+model.compile(loss='mse', optimizer='adam')
 # start_time = time.time()
 
 # es = EarlyStopping(
