@@ -54,7 +54,8 @@ print(x)    # [1328 rows x 9 columns] / 확인해봄.
 y = train_csv['count']  # y는 count 열만 가지고 옴. y를 만들고 있다.
 print(y.shape)  # (1328,)   # 확인해봄.
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.1, random_state=512) # random_state=3454, 맛집 레시피 : 4343
+x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.1, 
+                                                    random_state=512) # random_state=3454, 맛집 레시피 : 4343
 
 #2. 모델 구성
 model = Sequential()

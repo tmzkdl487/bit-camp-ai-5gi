@@ -36,7 +36,7 @@ model.add(Dense(1, activation='linear'))
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
 start_time = time.time()
-hist = model.fit(x_train, y_train, epochs=500, batch_size=16,   # hist는 히스토리를 줄인말이다.
+hist = model.fit(x_train, y_train, epochs=10, batch_size=16,   # hist는 히스토리를 줄인말이다.
           verbose=1, validation_split=0.3)
 end_time = time.time()
 
