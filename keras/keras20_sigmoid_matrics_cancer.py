@@ -46,7 +46,9 @@ y = datasets.target
 # (array([0, 1]), array([212, 357], dtype=int64))
 # 2진 분류할 때 갯수를 왜 구할까? 불균형 데이터인지 확인하려고.
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, random_state= 3434)
+x_train, x_test, y_train, y_test = train_test_split(x, y, 
+                                                    train_size=0.8, 
+                                                    random_state= 3434)
 
 print(x_train.shape, y_train.shape) # (455, 30) (455,)
 print(x_test.shape, y_test.shape)   # (114, 30) (114,)
@@ -63,11 +65,13 @@ model.add(Dense(1, activation = 'sigmoid'))  # 한정함수가 결과값을 0, 1
 # 시그모이드를 중간에 넣어도 된다.
 
 #3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam', metrics=['acc'])
+# model.compile(loss='mse', optimizer='adam', metrics=['acc'])
 # 시그모이드가 잘되는지 보기 위해서 매트릭스는 훈련에 영향을 미치지 않지만, 보조지표로 보기위해 accuracy를 넣었음.
 # 회귀 데이터에는 'accuracy'를 못넣지만 분류에는 'accuracy'를 넣어도 된다. 
 # []는 리스트이니 다른 것도 더 넣어도 된다. mse도 넣어도 된다.
 # 'accuracy'나 'acc'은 똑같은 말이다.
+
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
 
 start_time = time.time()
 

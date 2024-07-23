@@ -31,7 +31,7 @@ x = train_csv.drop(['Outcome'], axis=1)
 
 y = train_csv['Outcome']
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.6, random_state=11)
+x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.9, random_state=133)
 
 print(x_train.shape, y_train.shape) # (65, 8) (65,) 
 print(x_test.shape, y_test.shape)   # (587, 8) (587,)
@@ -48,7 +48,7 @@ model.add(Dense(8, activation='relu'))
 model.add(Dense(1, activation='sigmoid')) 
 
 #3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam', metrics=['acc'])
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
 
 start_time = time.time()
 
@@ -81,7 +81,7 @@ y_submit = np.round(y_submit)
 
 sample_submission_csv['Outcome'] = y_submit
 
-sample_submission_csv.to_csv(path + "sample_submission_0722_1705.csv")
+sample_submission_csv.to_csv(path + "sample_submission_0723_1145.csv")
 
 # print("ACC : ", round(loss[1],3))
 # print("로스 : ", loss[0])

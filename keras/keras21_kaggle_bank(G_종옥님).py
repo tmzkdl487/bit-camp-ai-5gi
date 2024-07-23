@@ -41,33 +41,64 @@ print(test_csv.dtypes)
 train_csv = train_csv.dropna() 
 test_csv = test_csv.fillna(test_csv.mean()) 
 
-x = train_csv.drop(['CustomerId', 'Surname', 'Balance', 'EstimatedSalary', 'Exited'], axis=1)
+train_csv = train_csv.drop(['CustomerId', 'Surname'], axis=1)
+test_csv = test_csv.drop(['CustomerId', 'Surname'], axis=1)
+
+###############################################
+from sklearn.preprocessing import MinMaxScaler
+
+train_scaler = MinMaxScaler()
+
+train_csv_copy = train_csv.copy()
+
+train_csv_copy = train_csv_copy.drop(['Exited'], axis = 1)
+
+train_scaler.fit(train_csv_copy)
+
+train_csv_scaled = train_scaler.transform(train_csv_copy)
+
+train_csv = pd.concat([pd.DataFrame(data = train_csv_scaled), train_csv['Exited']], axis = 1)
+
+test_scaler = MinMaxScaler()
+
+test_csv_copy = test_csv.copy()
+
+test_scaler.fit(test_csv_copy)
+
+test_csv_scaled = test_scaler.transform(test_csv_copy)
+
+test_csv = pd.DataFrame(data = test_csv_scaled)
+###############################################
+
+x = train_csv.drop(['Exited'], axis=1)
 y = train_csv['Exited']
 
 print(x)
 
-test_csv = test_csv.drop(['CustomerId', 'Surname', 'Balance', 'EstimatedSalary'], axis=1)
+# test_csv = test_csv.drop(['CustomerId', 'Surname', 'Balance', 'EstimatedSalary'], axis=1)
 
 from sklearn.preprocessing import MinMaxScaler
 scalar=MinMaxScaler()
 x[:] = scalar.fit_transform(x[:])
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.25, random_state=6666)
+x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.9, random_state=1186)
 
 print(x_train.shape, y_train.shape) 
 print(x_test.shape, y_test.shape)  
 
 #2. 모델 구성
 model = Sequential()
-model.add(Dense(128, input_dim=8, activation='relu'))
+model.add(Dense(32, input_dim=10, activation='relu'))
 model.add(Dense(64, activation='relu'))
-model.add(Dense(0.5, activation='relu'))
+model.add(Dense(128, activation='relu'))
+model.add(Dense(128, activation='relu'))
+model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(16, activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
 
 #3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam', metrics=['acc'])
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
 
 start_time = time.time()
 
@@ -77,8 +108,8 @@ es = EarlyStopping(
     patience = 25,
     restore_best_weights=True,
 )
-model.fit(x_train, y_train, epochs=1000, batch_size=8,
-          verbose=1, validation_split=0.38, callbacks= [es])
+model.fit(x_train, y_train, epochs=1000, batch_size=512,
+          verbose=1, validation_split=0.2, callbacks= [es])
 end_time = time.time
 
 #4. 평가, 예측
@@ -87,7 +118,7 @@ loss = model.evaluate(x_test, y_test, verbose=1)
 y_pred = model.predict(x_test)
 # print(y_pred[:20])
 y_pred = np.round(y_pred)
-print(y_pred[:20])
+print(y_pred[:50])
 
 accuracy_score = accuracy_score(y_test, y_pred)
 
@@ -97,7 +128,7 @@ y_submit = np.round(y_submit)
 
 sample_submission_csv['Exited'] = y_submit
 
-sample_submission_csv.to_csv(path + "sample_submission_0722_1812.csv")
+sample_submission_csv.to_csv(path + "sample_submission_0723_1216.csv")
 
 print("ACC : ", round(loss[1],3))
 print("로스 : ", loss[0])
