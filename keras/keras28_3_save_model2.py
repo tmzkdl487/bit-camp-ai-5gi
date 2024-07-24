@@ -1,6 +1,6 @@
-# keras19_EarlyStopping1_boston.py 복사.
+# keras28_2_load_model.py 복사
 
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.callbacks import EarlyStopping
 
@@ -39,15 +39,20 @@ print(x_train)  # 소수점으로 나옴.
 print(np.min(x_train), np.max(x_train))   # 그래서 다시 찍어봄. 0.0 1.0000000000000002
 print(np.min(x_test), np.max(x_test))   # -0.008298755186722073 1.1478180091225068 <_ 범위 밖으로 나오는게 맞음.
 
-#2. 모델구성
-model = Sequential()
+# #2. 모델구성
+# model = Sequential()
 # model.add(Dense(1, input_dim=13))
-model.add(Dense(10, activation='relu', input_dim=13))    # 이미지 input_shape=(8, 8, 1) / input_shape=(13)
-model.add(Dense(10, activation='relu'))
-model.add(Dense(10, activation='relu'))
-model.add(Dense(10, activation='relu'))
-model.add(Dense(10, activation='relu'))
-model.add(Dense(1, activation='linear'))
+# model.add(Dense(10))    # 이미지 input_shape=(8, 8, 1) / input_shape=(13)
+# model.add(Dense(5))
+# model.add(Dense(1))
+
+# model.summary()
+
+# model.save("./_save/keras28_1_save_model.h5")
+
+model = load_model("./_save/keras28/keras28_1_save_model.h5")
+
+# model.summary()
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
@@ -56,15 +61,17 @@ start_time = time.time()
 es = EarlyStopping(
     monitor= 'val_loss',
     mode = 'min',
-    patience= 100,
+    patience= 0,
     restore_best_weights= True
 )
 
-model.fit(x_train, y_train, epochs=2000, batch_size=16,   # hist는 히스토리를 줄인말이다.
+model.fit(x_train, y_train, epochs=10, batch_size=16,   # hist는 히스토리를 줄인말이다.
           verbose=1, validation_split=0.3,
           callbacks = [es]  #얼리스타핑을 콜백한다.
           )
 end_time = time.time()
+
+model.save("./_save/keras28_3_save_model.h5")
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
