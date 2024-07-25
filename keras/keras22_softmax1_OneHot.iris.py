@@ -50,33 +50,43 @@ y = dataset.target
 # print(y.shape)
 
 # 맹그러봐!!!
-# 원 핫: 1. 케라스
-from tensorflow.keras.utils import to_categorical
-y_ohe = to_categorical(y)
-print(y_ohe)
-print(y_ohe.shape)  # (150, 3)
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, 
+                                                    train_size=0.9,
+                                                    random_state= 1186,
+                                                    stratify=y)
+
+# print(pd.value_counts(y_trian))
+
+
+# # 원 핫: 1. 케라스
+# from tensorflow.keras.utils import to_categorical
+# y_ohe = to_categorical(y)
+# print(y_ohe)
+# print(y_ohe.shape)  # (150, 3)
 
 # 원 핫: 2. 판다스
 y_ohe2 = pd.get_dummies(y)
 print(y_ohe2.shape) # (150, 3)
 
-print("=============================================")
-# 원 핫: 3. 사이킷런
-from sklearn.preprocessing import OneHotEncoder
-y_ohe3 = y.reshape(-1, 1)
-ohe = OneHotEncoder(sparse=False)    # True가 디폴트
-y_ohe3 = ohe.fit_transform(y_ohe3)    # 아래 2개는 요거 1개를 2개로 나눈것.
-# ohe.fit(y_ohe3)
-# y_ohe3 = ohe.transform(y_ohe3)
+# print("=============================================")
+# # 원 핫: 3. 사이킷런
+# from sklearn.preprocessing import OneHotEncoder
+# y_ohe3 = y.reshape(-1, 1)
+# ohe = OneHotEncoder(sparse=False)    # True가 디폴트
+# y_ohe3 = ohe.fit_transform(y_ohe3)    # 아래 2개는 요거 1개를 2개로 나눈것.
+# # ohe.fit(y_ohe3)
+# # y_ohe3 = ohe.transform(y_ohe3)
 
-print(y_ohe3)
+# print(y_ohe3)
 
 
 ############# 맹그러봐 ###############
 
 x_train, x_test, y_train, y_test = train_test_split(x, y_ohe2, 
                                                     train_size=0.9,
-                                                    random_state= 1186)
+                                                    random_state= 1186,
+                                                    stratify=y)
 
 #2. 모델
 model = Sequential()
@@ -105,7 +115,7 @@ es = EarlyStopping(
 )
 
 model.fit(x_train, y_train, epochs=100, batch_size=8,
-          verbose=1, validation_split=0.1)
+          verbose=1, validation_split=0.1, callbacks=[es])
 end_time = time.time()
 
 #4. 평가, 예측
@@ -130,4 +140,7 @@ print("걸린시간 : ", round(end_time - start_time, 2), "초")
 # 에큐러시 1.0 나오게 해라.
 # ACC :  0.947
 # ACC :  0.974
+# ACC :  1.0
+
+# [실습] stratify=y을 넣고 돌려보기.
 # ACC :  1.0

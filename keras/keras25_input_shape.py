@@ -1,4 +1,4 @@
-# keras18_overfit1.boston.py 복사함
+# keras25_input_shape.py 복사.
 
 import numpy as np
 from tensorflow.keras.models import Sequential
@@ -10,34 +10,39 @@ import time
 
 #1. 데이터
 dataset = load_boston()
-print(dataset)
-print(dataset.DESCR)
-print(dataset.feature_names)
+# print(dataset)
+# print(dataset.DESCR)
+# print(dataset.feature_names)
 
 x = dataset.data
 y = dataset.target
 
-print(x)
-print(x.shape)  # (506, 13)
-print(y)  
-print(y.shape)  # (506,)
+# print(x)
+# print(x.shape)  # (506, 13)
+# print(y)  
+# print(y.shape)  # (506,)
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, random_state=6666)
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(1, activation='relu', input_dim=13))
-model.add(Dense(10, activation='relu'))
-model.add(Dense(10, activation='relu'))
-model.add(Dense(10, activation='relu'))
-model.add(Dense(10, activation='relu'))
-model.add(Dense(1, activation='linear'))
+# model.add(Dense(1, input_dim=13))
+model.add(Dense(1, input_shqpe=(13,)))    # 이미지 input_shape=(8, 8, 1)
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
 start_time = time.time()
-hist = model.fit(x_train, y_train, epochs=10, batch_size=16,   # hist는 히스토리를 줄인말이다.
-          verbose=1, validation_split=0.3)
+
+
+hist = model.fit(x_train, y_train, epochs=2000, batch_size=16,   # hist는 히스토리를 줄인말이다.
+          verbose=1, validation_split=0.3,
+          callbacks = [es]  #얼리스타핑을 콜백한다.
+          )
 end_time = time.time()
 
 #4. 평가, 예측

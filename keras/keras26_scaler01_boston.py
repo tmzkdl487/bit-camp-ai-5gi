@@ -1,32 +1,47 @@
-# keras18_overfit1.boston.py 복사함
+# keras19_EarlyStopping1_boston.py 복사.
 
-import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
-import sklearn as sk
+from tensorflow.keras.callbacks import EarlyStopping
+
 from sklearn.datasets import load_boston
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
+
+import numpy as np
+import sklearn as sk
 import time
 
 #1. 데이터
 dataset = load_boston()
-print(dataset)
-print(dataset.DESCR)
-print(dataset.feature_names)
+# print(dataset)
+# print(dataset.DESCR)
+# print(dataset.feature_names)
 
 x = dataset.data
 y = dataset.target
 
-print(x)
-print(x.shape)  # (506, 13)
-print(y)  
-print(y.shape)  # (506,)
+# print(x)
+# print(x.shape)  # (506, 13)
+# print(y)  
+# print(y.shape)  # (506,)
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, random_state=6666)
+x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, shuffle=True, random_state=6666)
+
+scaler = RobustScaler() # MinMaxScaler # StandardScale, MaxAbsScaler
+
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+
+print(x_train)  # 소수점으로 나옴.
+print(np.min(x_train), np.max(x_train))   # 그래서 다시 찍어봄. 0.0 1.0000000000000002
+print(np.min(x_test), np.max(x_test))   # -0.008298755186722073 1.1478180091225068 <_ 범위 밖으로 나오는게 맞음.
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(1, activation='relu', input_dim=13))
+# model.add(Dense(1, input_dim=13))
+model.add(Dense(10, activation='relu', input_dim=13))    # 이미지 input_shape=(8, 8, 1) / input_shape=(13)
 model.add(Dense(10, activation='relu'))
 model.add(Dense(10, activation='relu'))
 model.add(Dense(10, activation='relu'))
@@ -36,8 +51,18 @@ model.add(Dense(1, activation='linear'))
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
 start_time = time.time()
-hist = model.fit(x_train, y_train, epochs=10, batch_size=16,   # hist는 히스토리를 줄인말이다.
-          verbose=1, validation_split=0.3)
+
+es = EarlyStopping(
+    monitor= 'val_loss',
+    mode = 'min',
+    patience= 100,
+    restore_best_weights= True
+)
+
+model.fit(x_train, y_train, epochs=2000, batch_size=16,   # hist는 히스토리를 줄인말이다.
+          verbose=1, validation_split=0.3,
+          callbacks = [es]  #얼리스타핑을 콜백한다.
+          )
 end_time = time.time()
 
 #4. 평가, 예측
@@ -49,28 +74,6 @@ from sklearn.metrics import r2_score
 r2 = r2_score(y_test, y_predict)
 print("r2스코어 : ", r2) 
 print("걸린시간 : ", round(end_time - start_time, 2), "초")
-
-print("========================== hist ==============================")
-print(hist)
-print("======================= hist.histroy =========================")
-print(hist.history)
-print("============================ loss ============================")
-print(hist.history['loss'])
-print("======================= val_loss ============================")
-print(hist.history['val_loss'])
-
-# [실습] 파이썬 딕셔너리 검색
-
-import matplotlib.pyplot as plt
-plt.figure(figsize=(9, 6))  # 그림판 사이즈
-plt.plot(hist.history['loss'], c ='red', label='loss')  #  marker='.'
-plt.plot(hist.history['val_loss'], c ='blue', label='val_loss')
-plt.legend(loc='upper right')   # 오른쪽 상단에 라벨값 써줌.
-plt.title('Boston Loss')
-plt.xlabel('epoch')
-plt.ylabel('loss')
-plt.grid()
-plt.show()
 
 # [과제] train_size = 0.7 ~ 0.9 사이 / r2 0.8 -0.1 줄여주심. 0.7 나오게 하기.
 
@@ -87,3 +90,16 @@ plt.show()
 # r2스코어 :  0.8318105597373147 / 
 # validation_split=0.4을 넣어서 다시 해봄.
 # r2스코어 :  0.8390326228175955 / r2스코어 :  0.856450444072601
+# 로스 :  18.055999755859375
+
+# [실습] 데이터 MinMaxScaler 스켈링하고 돌려보기.
+# 로스 :  20.564085006713867 / r2스코어 :  0.8105601530728421
+
+# [실습] 데이터 StandardScaler 스켈링하고 돌려보기.
+# 로스 :  21.749914169311523 / r2스코어 :  0.799636098308407
+
+# [실습] MaxAbsScaler 스켈링하고 돌려보기.
+# 로스 :  17.427099227905273 / r2스코어 :  0.8394585791665131
+
+# [실습] RobustScaler 스켈링하고 돌려보기. 제일 좋음.
+# 로스 :  16.715578079223633 / r2스코어 :  0.8460132615838727

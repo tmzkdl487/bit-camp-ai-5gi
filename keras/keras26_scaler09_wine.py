@@ -5,6 +5,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.datasets import load_wine
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, accuracy_score
+from sklearn.preprocessing import StandardScaler, MaxAbsScaler, RobustScaler
 
 import numpy as np
 import pandas as pd
@@ -23,6 +24,11 @@ print(y_ohe.shape)  # (178, 3)
 x_train, x_test, y_train, y_test = train_test_split(x, y_ohe, train_size=0.9,
                                                     random_state=666,
                                                     stratify=y)
+scaler = RobustScaler() # MinMaxScaler, StandardScaler, MaxAbsScaler
+
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
 
 #2. 모델
 model = Sequential()
@@ -43,11 +49,11 @@ start_time = time.time()
 es = EarlyStopping(
     monitor= 'val_loss',
     mode = 'min',
-    patience = 100,
+    patience = 10,
     restore_best_weights= True
 )
 
-model.fit(x_train, y_train, epochs=1000, batch_size=1,
+model.fit(x_train, y_train, epochs=100, batch_size=1,
           verbose=1, validation_split=0.2, callbacks=[es])
 
 end_time = time.time()
@@ -55,7 +61,7 @@ end_time = time.time()
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test, verbose=1)
 
-print("로스는 : ", loss)
+print("로스 : ", loss)
 print("ACC : ", round(loss[1], 3))  # 반올림
 print("걸린시간 : ", round(end_time - start_time,2), "초")
 
@@ -63,3 +69,18 @@ print("걸린시간 : ", round(end_time - start_time,2), "초")
 
 # [실습] stratify=y을 넣고 돌려보기.
 # ACC :  ACC :  0.389
+
+# 그냥 
+# 로스는 :  [0.10185517370700836, 1.0] / ACC :  1.0
+
+# [실습] MinMaxScaler 넣고 점수 갱신해보기
+# 로스는 :  [0.9439105987548828, 0.9444444179534912] / ACC :  0.944
+
+# [실습] StandardScaler 스켈링하고
+# 로스는 :  [0.004755509551614523, 1.0] / ACC :  1.0
+
+# [실습] MaxAbsScaler 스켈링하고 돌려보기.
+# 로스 :  [1.0360684394836426, 0.8888888955116272] / ACC :  0.889
+
+# [실습] RobustScaler 스켈링하고 돌려보기.
+# 로스 :  [0.434501051902771, 0.8888888955116272] / ACC :  0.889
