@@ -77,7 +77,7 @@ end_time = time.time()
 
 #4. 평가, 예측
 print("==================== 2. MCP 출력 =========================")
-model = load_model('./_save/keras30_mcp/01_boston/k29_0726_2051_0116-12.866630.hdf5')
+model = load_model('./_save/keras30_mcp/01_boston/k29_0726_2051_0094-13.885953.hdf5')
 loss = model.evaluate(x_test, y_test, verbose=1)
 print("로스 : ", loss)
     
