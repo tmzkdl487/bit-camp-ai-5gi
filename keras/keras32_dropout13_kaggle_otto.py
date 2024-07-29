@@ -90,7 +90,7 @@ date = date.strftime("%m%d_%H%M")
 print(date) # 0726 / 0726_1654
 print(type(date))
 
-path = './_save/keras32'
+path = './_save/keras32/'
 filename = '{epoch:04d}-{val_loss:4f}.hdf5' # '1000-0.7777.hdf5'
 filepath = "".join([path, 'k32_', date, '_', filename])
 # 생성 예: "./_save/keras29_mcp/k29_0726_1654_1000-0.7777.hdf5"
@@ -139,3 +139,15 @@ print("걸린시간: " , round(end_time - start_time, 2), "초")
 
 # [실습] RobustScaler 스켈링하고 돌려보기.
 # 로스는 :  0.588 / ACC :  0.785
+
+# ==========================================
+# 가중치 세이프
+# 로스는 :  0.5882
+# ACC :  0.793
+
+# 로스는 :  0.5882
+# ACC :  0.793
+
+# =====================
+# 드롭아웃 하고 나서
+# 로스는 :  0.55 / ACC :  0.802 / 걸린시간:  16.6 초

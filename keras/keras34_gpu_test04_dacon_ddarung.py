@@ -1,7 +1,9 @@
+# keras30_MCP_save_04_dacon_ddarung.py 복사
+
 # https://dacon.io/competitions/open/235576/overview/description (대회 사이트 주소)
 
-from tensorflow.keras.models import Sequential, load_model
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Dropout, Input
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 from sklearn.model_selection import train_test_split
@@ -69,16 +71,30 @@ scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 test_csv=scaler.transform(test_csv)
-'''
-#2. 모델 구성
-model = Sequential()
-model.add(Dense(16, activation='relu', input_dim=9))   # activation='relu'
-model.add(Dense(16, activation='relu'))
-model.add(Dense(16, activation='relu'))
-model.add(Dense(16, activation='relu'))
-model.add(Dense(16, activation='relu'))
-model.add(Dense(8, activation='relu'))
-model.add(Dense(1, activation='linear')) # activation='linear'
+
+# #2. 모델 구성
+# model = Sequential()
+# model.add(Dense(64, activation='relu', input_dim=9))   # activation='relu'
+# model.add(Dropout(0.3))
+# model.add(Dense(32, activation='relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(32, activation='relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(16, activation='relu'))
+# model.add(Dense(16, activation='relu'))
+# model.add(Dense(8, activation='relu'))
+# model.add(Dense(1, activation='linear')) # activation='linear'
+
+#2-2. 모델 구성 (함수형)
+input1 = Input(shape=(9,))
+dense1 = Dense(64, name='ys1', activation='relu')(input1)  # 레이어 이름도 변경가능, 성능에는 영향을 안 미친다.
+dense2 = Dense(64, name='ys2', activation='relu')(dense1)
+drop1 = Dropout(0.3)(dense2)
+dense3 = Dense(32, name='ys3', activation='relu')(drop1)
+drop2 = Dropout(0.3)(dense3)
+dense4 = Dense(32, name='ys4', activation='relu')(drop2)
+output1 = Dense(1)(dense4)
+model = Model(inputs = input1, outputs = output1)
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam') # metrics=['accuracy', 'acc', 'mse']
@@ -100,9 +116,9 @@ date = date.strftime("%m%d_%H%M")
 print(date) # 0726 / 0726_1654
 print(type(date))
 
-path = './_save/keras30_mcp/04_dacon_ddarung/'
+path = './_save/keras32/'
 filename = '{epoch:04d}-{val_loss:4f}.hdf5' # '1000-0.7777.hdf5'
-filepath = "".join([path, 'k29_', date, '_', filename])
+filepath = "".join([path, 'k32_dropout_dacon_ddarung', date, '_', filename])
 # 생성 예: "./_save/keras29_mcp/k29_0726_1654_1000-0.7777.hdf5"
 
 ########################### mcp 세이프 파일명 만들기 끗 ################
@@ -120,10 +136,8 @@ model.fit(x_train, y_train, epochs=1000, batch_size=8,
           callbacks= [es, mcp]
           )
 end_time = time.time()
-'''
+
 #4. 평가, 예측
-print("==================== 2. MCP 출력 =========================")
-model = load_model('./_save/keras30_mcp/04_dacon_ddarung/k29_0726_2105_0098-1570.193604.hdf5')
 loss = model.evaluate(x_test, y_test)
 
 y_predict = model.predict(x_test)
@@ -139,17 +153,16 @@ submission_csv['count'] = y_submit  # submission count 열에 y_submit을 넣겠
 # print(submission_csv)   # 확인
 # print(submission_csv.shape) #.shape확인.
 
-submission_csv.to_csv(path + "submission_0726_1750.csv")    # 폴더 안에 파일로 만들겠다. 가로 안은 (저장 경로 + 파일명)이다.
+submission_csv.to_csv(path + "submission_0729_1301.csv")    # 폴더 안에 파일로 만들겠다. 가로 안은 (저장 경로 + 파일명)이다.
 
 print("r2스코어 : ", round(r2, 4))
 print ("로스는 : ", loss)   # 확인하려고 마지막에 집어넣음. 
-# print("ACC : ", round(loss[1], 3))
-# print("걸린시간: " , round(end_time - start_time, 2), "초")
+print("걸린시간 : ", round(end_time - start_time, 2), "초")
 
-# 세이브한 가중치
-# r2스코어 :  0.7396
-# 로스는 :  1445.9365234375
-
-# r2스코어 :  0.7396
-# 로스는 :  1445.9365234375
-
+if(gpus):
+    print("쥐피유 돈다!!!")
+else:
+    print("쥐피유 없다! xxxx")
+    
+# CPU: 걸린시간 :  5.74 초
+# GPU: 걸린시간 :  34.11 초

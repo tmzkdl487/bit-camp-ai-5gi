@@ -2,8 +2,8 @@
 
 # https://www.kaggle.com/competitions/otto-group-product-classification-challenge/overview
 
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Dropout, Input
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 from sklearn.model_selection import train_test_split
@@ -54,20 +54,27 @@ scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 
-#2. 모델
-model = Sequential()
-model.add(Dense(512, input_dim=93, activation='relu'))
-model.add(Dropout(0.3))
-model.add(Dense(512, activation='relu'))
-model.add(Dense(512, activation='relu'))
-model.add(Dropout(0.3))
-model.add(Dense(128, activation='relu'))
-model.add(Dense(128, activation='relu'))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(16, activation='relu')) 
-model.add(Dense(8, activation='relu')) 
-model.add(Dense(9, activation='softmax'))
+# #2. 모델
+# model = Sequential()
+# model.add(Dense(512, activation='relu'))
+# model.add(Dense(512, activation='relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(128, activation='relu'))
+# model.add(Dense(128, activation='relu'))
+# model.add(Dense(16, activation='relu')) 
+# model.add(Dense(9, activation='softmax'))
+
+#2-2. 모델 구성 (함수형)
+input1 = Input(shape=(93,))
+dense1 = Dense(512, name='ys1')(input1)  # 레이어 이름도 변경가능, 성능에는 영향을 안 미친다.
+dense2 = Dense(512, name='ys2', activation='relu')(dense1)
+drop1 = Dropout(0.3)(dense2)
+dense3 = Dense(128, name='ys3', activation='relu')(drop1)
+dense4 = Dense(128, name='ys4', activation='relu')(dense3)
+drop2 = Dropout(0.3)(dense4)
+dense5 = Dense(16, name='ys5', activation='relu')(drop2)
+output1 = Dense(9)(dense5)
+model = Model(inputs = input1, outputs = output1)
 
 #3. 컴파일, 훈련
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])  
@@ -90,7 +97,7 @@ date = date.strftime("%m%d_%H%M")
 print(date) # 0726 / 0726_1654
 print(type(date))
 
-path = './_save/keras32'
+path = './_save/keras32/'
 filename = '{epoch:04d}-{val_loss:4f}.hdf5' # '1000-0.7777.hdf5'
 filepath = "".join([path, 'k32_', date, '_', filename])
 # 생성 예: "./_save/keras29_mcp/k29_0726_1654_1000-0.7777.hdf5"
@@ -139,3 +146,15 @@ print("걸린시간: " , round(end_time - start_time, 2), "초")
 
 # [실습] RobustScaler 스켈링하고 돌려보기.
 # 로스는 :  0.588 / ACC :  0.785
+
+# ==========================================
+# 가중치 세이프
+# 로스는 :  0.5882
+# ACC :  0.793
+
+# 로스는 :  0.5882
+# ACC :  0.793
+
+# =====================
+# 드롭아웃 하고 나서
+# 로스는 :  0.55 / ACC :  0.802 / 걸린시간:  16.6 초

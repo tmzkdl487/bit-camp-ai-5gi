@@ -1,7 +1,7 @@
-# keras29_ModelCheckPonit5.py 복사
+# keras29_ModelCheckPoint1.py 복사
 
 from tensorflow.keras.models import Sequential, load_model
-from tensorflow.keras.layers import Dense, Dropout  # 여기에 드롭아웃 치기
+from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 from sklearn.datasets import load_boston
@@ -17,7 +17,7 @@ dataset = load_boston()
 x = dataset.data
 y = dataset.target
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.75, shuffle=True, random_state=6666)
+x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, shuffle=True, random_state=6666)
 
 scaler = RobustScaler() # MinMaxScaler # StandardScale, MaxAbsScaler
 
@@ -27,14 +27,16 @@ x_test = scaler.transform(x_test)
 #2. 모델구성
 model = Sequential()
 model.add(Dense(64, input_shape=(13,)))    
-model.add(Dropout(0.3)) # 64개의 30%인 45개만 훈련시키겠다. 몇 퍼센트 뺄지는 상관없음. 0.1 ~ 0.5 사이로 바꿀 것.
+model.add(Dropout(0.3))
 model.add(Dense(64, activation='relu'))
 model.add(Dropout(0.3))
 model.add(Dense(32, activation='relu'))
-model.add(Dropout(0.2))
+model.add(Dropout(0.3))
 model.add(Dense(32, activation='relu'))
-model.add(Dropout(0.1))
+model.add(Dropout(0.2))
 model.add(Dense(16, activation='relu'))
+model.add(Dropout(0.1))
+model.add(Dense(8, activation='relu'))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
@@ -58,7 +60,7 @@ print(type(date))
 
 path = './_save/keras32/'
 filename = '{epoch:04d}-{val_loss:4f}.hdf5' # '1000-0.7777.hdf5'
-filepath = "".join([path, 'k32_', date, '_', filename])
+filepath = "".join([path, 'k32_dropout_bostron', date, '_', filename])
 # 생성 예: "./_save/keras29_mcp/k29_0726_1654_1000-0.7777.hdf5"
 
 ########################### mcp 세이프 파일명 만들기 끗 ################
@@ -73,7 +75,7 @@ mcp = ModelCheckpoint( # mcp는 ModelCheckpoint
 
 start_time = time.time()
 
-hist = model.fit(x_train, y_train, epochs=100, batch_size=8, 
+hist = model.fit(x_train, y_train, epochs=1000, batch_size=16, 
                  validation_split=0.2, verbose=1, callbacks=[es, mcp])
 end_time = time.time()
 
@@ -89,7 +91,3 @@ print("r2스코어 : ", r2)
 
 # 로스 :  13.901333808898926
 # r2스코어 :  0.8719385433738247
-
-# 드롭하고 
-# 로스 :  13.888936042785645
-# r2스코어 :  0.865140931099616
