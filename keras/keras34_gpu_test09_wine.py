@@ -53,7 +53,7 @@ output1 = Dense(1)(dense4)
 model = Model(inputs = input1, outputs = output1)
 
 #3. 컴파일, 훈련
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
+model.compile(loss='mse', optimizer='adam', metrics=['acc'])
 
 start_time = time.time()
 
@@ -105,7 +105,7 @@ if(gpus):
 else:
     print("쥐피유 없다! xxxx")
 
-# CPU: 
-# GPU: 
+# CPU: 걸린시간 : 5.92 초
+# GPU: 걸린시간 : 15.41 초
     
 
