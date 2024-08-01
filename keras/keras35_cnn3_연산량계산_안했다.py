@@ -44,7 +44,7 @@ model.add(Dense(units=9, input_shape=(8,)))
                         # shape= (batch_size, input_dim)
 model.add(Dense(10, activation='softmax'))
 
-# model.summary()
+model.summary()
 # Model: "sequential"
 # _________________________________________________________________
 #  Layer (type)                Output Shape              Param #
@@ -115,3 +115,14 @@ print("걸린시간 : ", round(end_time - start_time, 2), "초")
 
 # # CPU: 걸린시간: r2 스코어 :  0.7506777688474371 / 로스는 :  0.5591500401496887 / ACC :  0.852 / 걸린시간 :  23.05 초
 # # GPU: 걸린시간: r2 스코어 :  0.7435134250531441 / 로스는 :  0.536513090133667 / ACC :  0.847 / 걸린시간 :  4.93 초
+
+
+model = Sequential()
+model.add(Conv2D(10, (2,2), input_shape=(28, 28, 1)))  
+model.add(Conv2D(filters=20, kernel_size=(3,3)))   
+model.add(Conv2D(15, (4,4)))   
+model.add(Flatten())   
+model.add(Dense(units=8)) 
+model.add(Dense(units=9, input_shape=(8,)))                    
+model.add(Dense(10, activation='softmax'))
+
