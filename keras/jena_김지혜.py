@@ -75,7 +75,7 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.95,
 
 #4. 평가, 예측
 print("==================== 2. MCP 출력 =========================")
-model = load_model('C:/ai5/_save/keras55/jena_김지혜.hdf5')
+model = load_model('C:/ai5/_save/keras55/k55_jena0812_1617_0016-1.996190.hdf5')
 results = model.evaluate(x_test, y_test) # results 결과 / evaluate 평가
 
 y_pred = model.predict(x_test2) #batch_size=300
