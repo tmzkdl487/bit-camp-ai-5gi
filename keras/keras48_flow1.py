@@ -56,14 +56,14 @@ it = datagen.flow(img,
 
 print(it.next())
 
-fig, ax = plt.subplots(nrows=1, ncols=5, figsize=(10, 10))
+fig, ax = plt.subplots(nrows=1, ncols=5, figsize=(10, 10))  # 5개의 미이지를 만듬.
 
 for i in range(5):
     batch = it.next()   # <- datagen이 .next해가지고 5번 돌아감. 그때마다 datagen에 따라 값이 달라짐.
     
     print(batch.shape)   # (1, 100, 100, 3)
     
-    batch = (batch.reshape(100, 100, 3))
+    batch = (batch.reshape(100, 100, 3))    # 3차원으로 만듬.
     
     ax[i].imshow(batch) 
     ax[i].axis('off')
