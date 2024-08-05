@@ -2,7 +2,7 @@
     
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.models import Sequential, load_model
-from tensorflow.keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D
+from tensorflow.keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D, BatchNormalization
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 
@@ -14,6 +14,24 @@ import numpy as np
 import pandas as pd
 import time
 
+# # ## test 이미지 파일명 변경 ##
+# import os
+# import natsort
+
+# file_path = "C:/ai5/_data/kaggle/dogs-vs-cats-redux-kernels-edition/test/test"
+# file_names = natsort.natsorted(os.listdir(file_path))
+
+# print(np.unique(file_names))
+# i = 1
+# for name in file_names:
+#     src = os.path.join(file_path,name)
+#     dst = str(i).zfill(5)+ '.jpg'
+#     dst = os.path.join(file_path, dst)
+#     os.rename(src, dst)
+#     i += 1
+    
+# ###################
+
 #1. 데이터
 train_datagen = ImageDataGenerator(
     rescale=1./255,  # 스켈링한 데이터로 줘라, 수치화. 수치화만 하고 싶으면 밑에는 다 안써도 됨.
@@ -21,18 +39,18 @@ train_datagen = ImageDataGenerator(
     vertical_flip=True,    
     width_shift_range=0.1, 
     height_shift_range=0.1, 
-    rotation_range= 5,   
-    zoom_range=1.2,        
-    shear_range=0.7,       
+    rotation_range= 10,   
+    zoom_range=0.1,        
+    shear_range=0.1,       
     fill_mode='nearest',   
 )
 
 test_datagen = ImageDataGenerator(
     rescale=1./255)
 
-path_train = './_data/kaggle/dogs-vs-cats-redux-kernels-edition/train/'
-path_test = './_data/kaggle/dogs-vs-cats-redux-kernels-edition/test/'
-path = 'C:/ai5/_data/kaggle/dogs-vs-cats-redux-kernels-edition/'
+path_train = "./_data/kaggle/dogs-vs-cats-redux-kernels-edition/train/"
+path_test = "C:/ai5/_data/kaggle/dogs-vs-cats-redux-kernels-edition/test/"
+path = "./_data/kaggle/dogs-vs-cats-redux-kernels-edition/"
 
 sample_submission_csv = pd.read_csv(path + "sample_submission.csv", index_col=0)
 
@@ -53,6 +71,7 @@ xy_test = test_datagen.flow_from_directory(
     batch_size=12500,  
     class_mode='binary',
     color_mode='rgb',
+    shuffle=False,
     # Found 12500 images belonging to 1 classes.
 )  
 
@@ -61,9 +80,9 @@ xy_test = test_datagen.flow_from_directory(
 # x_test = xy_test[0][0]
 # y_test = xy_test[0][1]
 
-x_train, x_test, y_train, y_test = train_test_split(xy_train[0][0], xy_train[0][1], train_size=0.8, 
+x_train, x_test, y_train, y_test = train_test_split(xy_train[0][0], xy_train[0][1], train_size=0.75, 
                                                     shuffle= True,
-                                                    random_state=1)
+                                                    random_state=11)    # 83
 
 end_time1 = time.time()
 
@@ -71,22 +90,36 @@ end_time1 = time.time()
 
 xy_test=xy_test[0][0]
 
+'''
 #2. 모델
 model = Sequential()
-model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(102, 102, 3)))
-model.add(MaxPooling2D(2, 2))
-model.add(Dropout(0.3))
-model.add(Conv2D(32, (3, 3), activation='relu'))
-model.add(MaxPooling2D(2, 2))
-model.add(Dropout(0.3))
-model.add(Conv2D(32, (3, 3), activation='relu'))
-model.add(MaxPooling2D(2, 2))                        
-model.add(Flatten())                  
-model.add(Dense(16, activation='relu'))  
+model.add(Conv2D(32, (3,3), activation='relu', input_shape=(100, 100, 3), padding='same')) 
+model.add(MaxPooling2D())
+model.add(Dropout(0.25))
+
+model.add(BatchNormalization())
+model.add(Conv2D(filters=64, activation='relu', kernel_size=(3,3), padding='same')) 
+model.add(MaxPooling2D())
+model.add(Dropout(0.25))
+
+model.add(BatchNormalization())
+model.add(Conv2D(filters=128, activation='relu', kernel_size=(3,3), padding='same')) 
+model.add(MaxPooling2D())
+model.add(Dropout(0.25))
+
+model.add(BatchNormalization())
+model.add(Conv2D(64, (3,3), activation='relu', padding='same')) 
+model.add(MaxPooling2D())
+model.add(Dropout(0.25))
+
+model.add(Flatten()) 
 model.add(Dropout(0.5))
-model.add(Dense(8, activation='relu'))  
-model.add(Dropout(0.5))
+model.add(Dense(1024, activation='relu')) 
+model.add(Dropout(0.25))
+model.add(Dense(512, activation='relu')) 
+model.add(Dropout(0.25))
 model.add(Dense(1, activation='sigmoid'))
+
 
 #3. 컴파일, 훈련
 model.compile(loss='binary_crossentropy', optimizer='adam', 
@@ -96,7 +129,7 @@ start_time2 = time.time()
 es = EarlyStopping(
     monitor = 'val_loss',
     mode = 'min',
-    patience = 10,
+    patience = 5,
     restore_best_weights= True
 )
 
@@ -124,15 +157,18 @@ mcp = ModelCheckpoint(
     filepath = filepath,
 )
 
-model.fit(x_train, y_train, epochs=100, batch_size=85,
-          validation_split=0.3, verbose=1, callbacks=[es, mcp])
+model.fit(x_train, y_train, epochs=1000, batch_size=64,
+          validation_split=0.2, verbose=1, callbacks=[es, mcp])
 
 end_time2 = time.time()
+'''
 
 #4. 평가, 예측
-loss = model.evaluate(x_test, y_test, verbose=1)  
+print("==================== 2. MCP 출력 =========================")
+model = load_model('C:/ai5/_data/kaggle/dogs-vs-cats-redux-kernels-edition/k35_040804_2156_0002-1.384869.hdf5')
+loss = model.evaluate(x_test, y_test, verbose=1, batch_size=90)  
 
-y_pred = model.predict(x_test)
+y_pred = model.predict(x_test, batch_size=90)
 
 # xy_test = xy_test.to_numpy()
 # xy_test = xy_test.reshape(200000, 10, 10, 2)
@@ -141,7 +177,8 @@ y_submit = model.predict(xy_test)
 
 sample_submission_csv['label']= y_submit
 
-sample_submission_csv.to_csv(path + "sample_submission_kaggle_cat_dog_0802_2029.csv")
+# sample_submission_csv.to_csv(path + "sample_submission_kaggle_cat_dog_0805_0958.csv")
+sample_submission_csv.to_csv(path + "sample_submission_kaggle_cat_dog_0805_1017.csv")
 
 print("로스는 : ", loss[0])
 print("ACC : ", round(loss[1], 3))

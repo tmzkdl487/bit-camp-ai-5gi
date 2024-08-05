@@ -100,7 +100,7 @@ print(type(date))
 
 path = './_save/keras35/'
 filename = '{epoch:04d}-{val_loss:4f}.hdf5' # '1000-0.7777.hdf5'
-filepath = "".join([path, 'k35_04', date, '_', filename])
+filepath = "".join([path, 'k41_brain', date, '_', filename])
 # 생성 예: "./_save/keras29_mcp/k29_0726_1654_1000-0.7777.hdf5"
 
 ########################### mcp 세이프 파일명 만들기 끗 ################

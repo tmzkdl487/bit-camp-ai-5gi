@@ -2,6 +2,7 @@
 
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, Callback
 
 from sklearn.datasets import load_boston
 from sklearn.model_selection import train_test_split
@@ -54,7 +55,7 @@ print(type(date))
 
 path = './_save/keras30_mcp/01_boston/'
 filename = '{epoch:04d}-{val_loss:4f}.hdf5' # '1000-0.7777.hdf5'
-filepath = "".join([path, 'k29_', date, '_', filename])
+filepath = "".join([path, 'k30_boston', date, '_', filename])
 # 생성 예: "./_save/keras29_mcp/k29_0726_1654_1000-0.7777.hdf5"
 
 ########################### mcp 세이프 파일명 만들기 끗 ################
@@ -64,8 +65,15 @@ mcp = ModelCheckpoint( # mcp는 ModelCheckpoint
     mode='auto',
     verbose=1,
     save_best_olny=True, 
+    save_weights_only=False,
     filepath = filepath,
 )
+
+class LastCheckpointSaver(Callback):
+    def on_epoch_end(self, epoch, logs=None):
+        if epoch == self.params['epochs'] - 1:
+            self.model.save(filepath, overwrite=True)
+            print(f"최종 모델 저장: {filepath}")
 
 start_time = time.time()
 
