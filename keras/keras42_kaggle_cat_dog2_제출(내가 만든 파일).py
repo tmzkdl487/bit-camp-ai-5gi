@@ -1,3 +1,4 @@
+# keras44_kaggle_cat_dog1_제출.py 복사
 # https://www.kaggle.com/competitions/dogs-vs-cats-redux-kernels-edition/overview
     
 from tensorflow.keras.preprocessing.image import ImageDataGenerator

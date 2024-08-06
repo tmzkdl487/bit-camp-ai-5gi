@@ -40,7 +40,7 @@ start_time1 = time.time()
 
 xy_train = train_datagen.flow_from_directory(
     path_train, 
-    target_size=(102, 102), 
+    target_size=(80, 80), 
     batch_size=25000, 
     class_mode='binary',
     color_mode='rgb',
@@ -49,7 +49,7 @@ xy_train = train_datagen.flow_from_directory(
 
 xy_test = test_datagen.flow_from_directory(
     path_test, 
-    target_size=(102, 102),  
+    target_size=(80, 80),  
     batch_size=12500,  
     class_mode='binary',
     color_mode='rgb',

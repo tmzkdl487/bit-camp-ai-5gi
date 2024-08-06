@@ -32,3 +32,4 @@ xy_train = train_datagen.flow_from_directory(
 np_path = 'c:/ai5/_data/_save_npy/'
 np.save(np_path + 'keras45_rps_03_x_train.npy' , arr=xy_train[0][0])
 np.save(np_path + 'keras45_rps_03_y_train.npy' , arr=xy_train[0][1])
+

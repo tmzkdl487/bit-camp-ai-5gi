@@ -1,3 +1,5 @@
+# keras48_flow2_next.써.py 복사
+
 from tensorflow.keras.datasets import fashion_mnist
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import numpy as np
@@ -21,7 +23,7 @@ augment_size = 100  # 증가시키다.
 
 # print(x_train.shape)    # (60000, 28, 28)
 
-print(x_train[0])    
+# print(x_train[0])    
 
 # plt.imshow(x_train[0])
 # plt.show()
@@ -34,18 +36,29 @@ xy_data = train_datagen.flow(
     np.zeros(augment_size), # y
     batch_size=augment_size,
     shuffle=False,
-).next()
+) # .next()
 
-print(xy_data)
+
+# print(xy_data)
 # print(x_data.shape) # AttributeError: 'tuple' object has no attribute 'shape'
 # print(len(xy_data))  # 2 
 # print(xy_data[0].shape) # (100, 28, 28, 1)
 # print(xy_data[1].shape) # (100,)
+# print(type(xy_data))    # .next()가 있으면 <class 'tuple'>
+# <class 'keras.preprocessing.image.NumpyArrayIterator'>
+
+# print(len(xy_data)) # 1
+
+# print(xy_data[0].shape) # AttributeError: 'tuple' object has no attribute 'shape'
+# print(xy_data[1].shape) # AttributeError: 'tuple' object has no attribute 'shape'
+
+# print(xy_data[0][0].shape)  # (100, 28, 28, 1)
+
 
 plt.figure(figsize=(7,7))
 for i in range(49):
     plt.subplot(7, 7, i+1)  
-    plt.imshow(xy_data[0][i], cmap='gray')
+    plt.imshow(xy_data[0][0][i], cmap='gray')
     plt.axis('off')
 
 plt.show()

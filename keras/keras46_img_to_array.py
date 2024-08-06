@@ -7,7 +7,7 @@ import numpy as np
 
 path = 'C:/ai5/_data/image/me/me.jpg'
 
-img = load_img(path, target_size=(100, 100),)
+img = load_img(path, target_size=(80, 80),)
 
 print(img)
 # <PIL.Image.Image image mode=RGB size=200x200 at 0x1E4B13DA6A0>
@@ -28,4 +28,4 @@ print(img.shape)    # (1, 100, 100, 3)
 # me 폴더에 위에 데이커를 npy로 저장할 것
 np_path = 'C:/ai5/_data/image/me/'
 
-np.save(np_path + 'me2.npy', arr=img)
+np.save(np_path + 'me3.npy', arr=img)

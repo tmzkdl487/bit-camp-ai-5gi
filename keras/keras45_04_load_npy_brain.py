@@ -23,6 +23,9 @@ y_train = np.load(np_path + 'keras45_brain_01_y_train.npy')
 x_test = np.load(np_path + 'keras45_brain_01_x_test.npy')
 y_test = np.load(np_path + 'keras45_brain_01_y_test.npy')
 
+# print(x_train.shape, y_train.shape) (160, 200, 200, 1) (160,)
+# print(x_test.shape, y_test.shape) (120, 200, 200, 1) (120,)
+
 end_time1 = time.time()
 print("데이터 걸린시간 : ", round(end_time1 - start_time, 2), "초")
 
