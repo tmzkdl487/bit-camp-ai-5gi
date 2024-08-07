@@ -15,7 +15,7 @@ import pandas as pd
 import time
 
 #1. 데이터
-'''
+
 np_path = 'c:/ai5/_data/_save_npy/'
 
 x_train_m = np.load(np_path + 'keras45_gender_05_Man_x_train.npy')
@@ -74,7 +74,10 @@ y = np.concatenate((y_train_m, y_train_w))
 
 print(x.shape, y.shape) # (36167, 80, 80, 3) (36167,)
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.75, 
+np_path2='C:/ai5/_data/image/me/'
+x_test2=np.load(np_path2 + 'me3.npy')
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.9, 
                                                     shuffle= True,  random_state=11)   
 
 #2. 모델
@@ -144,7 +147,7 @@ mcp = ModelCheckpoint(
 )
 
 model.fit(x_train, y_train, epochs=1000, batch_size=16,
-          validation_split=0.25, verbose=1, callbacks=[es, mcp])
+          validation_split=0.2, verbose=1, callbacks=[es, mcp])
 
 end_time2 = time.time()
 
@@ -153,26 +156,38 @@ end_time2 = time.time()
 # model = load_model('C:/ai5/_data/image/brain/k41_brain0805_1223_0081-0.014112.hdf5')
 loss = model.evaluate(x_test, y_test, verbose=1, batch_size=16)  
 
-y_pred = model.predict(x_test, batch_size=16)
+y_pred = model.predict(x_test2, batch_size=16)
+
+y_pred = np.clip(y_pred, 1e-6, 1-(1e-6))
+
 
 print("로스는 : ", loss[0])
 print("ACC : ", round(loss[1], 3))
 # print(" 데이터 걸린시간 : ", round(end_time1 - start_time1, 2), "초")
 print(" 걸린시간 : ", round(end_time2 - start_time2, 2), "초")
+print(y_pred)   # 내가 남자지 여잔지 결과
 
 # 로스는 :  0.3053964376449585 / ACC :  0.86 /  걸린시간 :  387.9 초
 
-'''
-################# 내가 남자인지 여자인지 확인.
+# 이미지 확인 후
+# 로스는 :  0.27371418476104736 / ACC :  0.875 /  걸린시간 :  396.01 초
+# 로스는 :  0.2773433029651642 / ACC :  0.876 /  걸린시간 :  396.59 초/ [[0.]]
 
-path = 'C:/ai5/_data/image/me/'
+# y_pred = np.clip(y_pred, 1e-6, 1-(1e-6)) 현아님이 알려준 이 코드 넣으니까 여자나옴!!!!
+# 로스는 :  0.26245108246803284 / ACC :  0.88 /  걸린시간 :  514.23 초 / [[1.e-06]]
 
-x_test = np.load(path + 'me3.npy')
 
-model = load_model('C:/ai5/_data/kaggle/biggest_gender/k49_gender0806_2057_0034-0.327698.hdf5')
+# ################# 내가 남자인지 여자인지 확인. 현아님이 수정해줘서 이렇게 할 필요 없음. 
+# 그냥 바로 테스트에 내 사진을 넣고 돌렸음.
 
-y_predict = model.predict(x_test)
+# path = 'C:/ai5/_data/image/me/'
 
-print(np.round(y_predict))
+# x_test = np.load(path + 'me3.npy')
 
-# [[0.]] <= 남자로 나옴.
+# model = load_model('C:/ai5/_data/kaggle/biggest_gender/k49_gender0806_2057_0034-0.327698.hdf5')
+
+# y_predict = model.predict(x_test)
+
+# print(np.round(y_predict))
+
+# # [[0.]] <= 남자로 나옴.

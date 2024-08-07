@@ -9,8 +9,8 @@ train_datagen = ImageDataGenerator(
     width_shift_range=0.1,  # 평행이동 <- 위에 수평, 수직, 평행이동 데이터를 추가하면 8배의 데이터가 늘어난다.
     height_shift_range=0.1, # 평행이동 수직
     rotation_range= 5,      # 정해진 각도만큼 이미지 회전 
-    zoom_range=1.2,         # 축소 또는 확대
-    shear_range=0.7,        # 좌표 하나를 고정시키고 다른 몇 개의 좌표를 이동시키는 변환.
+    zoom_range=0.1,         # 축소 또는 확대
+    shear_range=0.1,        # 좌표 하나를 고정시키고 다른 몇 개의 좌표를 이동시키는 변환.
     fill_mode='nearest',    # 몇 개 더 있지만, 대표적으로 0도 있음. 너의 빈자리 비슷한 거로 채워줄께.
 )
 

@@ -49,9 +49,9 @@ train_datagen = ImageDataGenerator(
     rescale=1./255,  # 스켈링한 데이터로 줘라, 수치화. 수치화만 하고 싶으면 밑에는 다 안써도 됨.
     horizontal_flip=True,   # 수평 뒤집기
     vertical_flip=True,     # 수직 뒤집기
-    width_shift_range=0.2,  # 평행이동 <- 위에 수평, 수직, 평행이동 데이터를 추가하면 8배의 데이터가 늘어난다.
+    width_shift_range=0.1,  # 평행이동 <- 위에 수평, 수직, 평행이동 데이터를 추가하면 8배의 데이터가 늘어난다.
     # height_shift_range=0.1, # 평행이동 수직
-    rotation_range= 15,      # 정해진 각도만큼 이미지 회전 
+    rotation_range= 2,      # 정해진 각도만큼 이미지 회전 
     # zoom_range=1.2,         # 축소 또는 확대
     # shear_range=0.7,        # 좌표 하나를 고정시키고 다른 몇 개의 좌표를 이동시키는 변환.
     fill_mode='nearest',    # 몇 개 더 있지만, 대표적으로 0도 있음. 너의 빈자리 비슷한 거로 채워줄께.
@@ -182,3 +182,6 @@ print("데이터 걸린시간 : ", round(end_time1 - start_time1, 2), "초")
 # print("걸린시간 : ", round(end_time2 - start_time2, 2), "초")
 
 # 로스는 :  0.6934699416160583 / ACC :  0.498 / 데이터 걸린시간 :  6.22 초
+
+# 이미지 확인 후 돌린 것
+# 로스는 :  0.6933377385139465 / ACC :  0.499 / 데이터 걸린시간 :  6.95 초

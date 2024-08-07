@@ -24,13 +24,13 @@ import time
 
 train_datagen = ImageDataGenerator(
     rescale=1./255,  # 스켈링한 데이터로 줘라, 수치화. 수치화만 하고 싶으면 밑에는 다 안써도 됨.
-    horizontal_flip=True,   # 수평 뒤집기
-    vertical_flip=True,     # 수직 뒤집기
-    width_shift_range=0.2,  # 평행이동 <- 위에 수평, 수직, 평행이동 데이터를 추가하면 8배의 데이터가 늘어난다.
+    # horizontal_flip=True,   # 수평 뒤집기
+    # vertical_flip=True,     # 수직 뒤집기
+    width_shift_range=0.1,  # 평행이동 <- 위에 수평, 수직, 평행이동 데이터를 추가하면 8배의 데이터가 늘어난다.
     # height_shift_range=0.1, # 평행이동 수직
-    rotation_range= 15,      # 정해진 각도만큼 이미지 회전 
-    # zoom_range=1.2,         # 축소 또는 확대
-    # shear_range=0.7,        # 좌표 하나를 고정시키고 다른 몇 개의 좌표를 이동시키는 변환.
+    # rotation_range= 15,      # 정해진 각도만큼 이미지 회전 
+    zoom_range=0.1,         # 축소 또는 확대
+    shear_range=0.1,        # 좌표 하나를 고정시키고 다른 몇 개의 좌표를 이동시키는 변환.
     fill_mode='nearest',    # 몇 개 더 있지만, 대표적으로 0도 있음. 너의 빈자리 비슷한 거로 채워줄께.
 )
 
@@ -86,7 +86,7 @@ start_time = time.time()
 es = EarlyStopping(
     monitor = 'val_loss',
     mode = 'min',
-    patience = 30,
+    patience = 10,
     restore_best_weights= True
 )
 
@@ -114,7 +114,7 @@ mcp = ModelCheckpoint(
     filepath = filepath,
 )
 
-model.fit(x_train, y_train, epochs=1000, batch_size= 500,
+model.fit(x_train, y_train, epochs=10000, batch_size= 32,
           validation_split=0.3, verbose=1, callbacks=[es, mcp])
 
 end_time = time.time()
@@ -166,3 +166,7 @@ print("걸린시간 : ", round(end_time - start_time, 2), "초")
 # augment하고 돌려보기
 # 로스는 :  0.003 / ACC :  0.985 / 걸린시간 :  30.07 초 / 에포 100
 # 로스는 :  0.002 / ACC :  0.985 / 걸린시간 :  58.87 초 / 에포 1000
+
+# 이미지 확인하고 돌리기
+# 로스는 :  0.002 / ACC :  0.986 / 걸린시간 :  50.76 초
+# 로스는 :  0.005 / ACC :  0.972 / 걸린시간 :  73.77 초
