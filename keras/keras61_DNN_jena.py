@@ -1,20 +1,12 @@
+# keras55_kaggle_jena.py 복사
+
+# jena를 Dnn으로 구성
+
+# 예시.
+# x : (42만, 144, 13) -> (42만, 144*13)
+# y : (42만, 144)
+
 # https://www.kaggle.com/datasets/stytch16/jena-climate-2009-2016
-
-# y는 T(degC)로 잡아라. 144개
-
-# 자르는 거는 맘대로
-
-# 31.12.2016 00:10:00 부터
-# 01.01.2017 00:00:00 까지
-
-# 맞춰라!!! 1, 2, 3등 상 줌. 일요일 12시 59분까지
-
-# LMSE로
-
-# y의 shape는 (n, 144)
-# 프레딕은 (1, 144)
-
-# 소스코드와 가중치를 제출 할 것.
 
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM, Dropout, Flatten
@@ -58,17 +50,11 @@ csv['dos'] = train_dt.dayofweek
 y3 = csv.tail(144)
 y3 = y3['T (degC)']
 
-# print(y3.shape) # (144,)
-
-# exit()
-
 csv = csv[:-144]
 
 # print(csv.shape)    # (420407, 14) <- 144개를 없앰. / (420407, 19)
 
-# print(y3.shape) # (144,)
 
-# exit()
 x1 = csv.drop(['T (degC)', 'max. wv (m/s)', 'max. wv (m/s)', 'wd (deg)',"year"], axis=1)  # (420407, 13) <- T (degC) 없앰, 'wd (deg)'
 
 y1 = csv['T (degC)']
@@ -91,32 +77,26 @@ x2 = split_x(x1, size)
 
 y2 = split_x(y1, size)
 
-# print(x2.shape)   # (420264, 144, 15)
-# print(y2.shape)   # (420264, 144)
-
-# exit()
-
 x = x2[:-1, :]
 y = y2[1:]
 
-# print(x.shape)  # (420263, 144, 13) -> x는 맨 뒤에를 날리고. / (420407, 17) / (420263, 144, 15)
-# print(y.shape)  # (420263, 144)     -> y는 맨 앞을 날렸음.   / (420407,)    / (420263, 144)
+############## DNN으로 바꾸기
 
-# print(x2[-2])
-# print(x[-1]) <- 잘 잘렸는지 확인해 봄.
+x = x.reshape(420263, 144*15)
 
-# print(x.shape)  # (420263, 144, 15)
-# print(y.shape)  # (420263, 144)
+# print(x.shape, y.shape) # (420263, 2160) (420263, 144)
 
 # exit()
 
-x_test2 = x2[-1] # (144, 13, 1)
+x_test2 = x2[-1] 
 
-# print(x_test2.shape)    # (144, 17)
+# x_test2 = x_test2.reshape(1, 144*15)
+
+# print(x_test2.shape)    # (144, 15)
 
 # exit()
 
-x_test2 = np.array(x_test2).reshape(1, 144, 15)
+x_test2 = np.array(x_test2).reshape(1, 144*15)
 
 # print(x_test2.shape)    # (1, 144, 13) / (1, 144, 17)
 
@@ -131,6 +111,8 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.95,
 # (378236, 144, 13) (42027, 144, 13) (378236, 144) (42027, 144) / (378236, 144, 17) (42027, 144, 17) (378236, 144) (42027, 144)
 
 # exit()
+
+# 스켈링 하고 싶으면 밑에 주석 풀고 스켈링해도 되는데 스켈링하니 성능이 더 떨어져서 안함.
 
 # x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1]*x_train.shape[2]))
 # x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1]*x_test.shape[2]))
@@ -151,17 +133,23 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.95,
 
 # exit()
 
+############# DNN 으로 만들어서 돌리기
+
+# print(x_train.shape, y_test.shape) # (399249, 2160) (21014, 144)
+
+# exit()
+
+# print(x.shape, y.shape)     # (420263, 2160) (420263, 144)
+
+# exit() 
+
 # 2. 모델
 model = Sequential()
-model.add(LSTM(32, return_sequences=True, input_shape=(144, 15)))   # timesteps, features / activation='tanh'
-model.add(LSTM(120))
-model.add(Dense(400, activation='relu'))
-model.add(Dropout(0.1))
-model.add(Dense(370, activation='relu'))
-model.add(Dropout(0.1)) 
-model.add(Dense(320, activation='relu'))
-model.add(Dense(300, activation='relu'))
-model.add(Dense(288, activation='relu'))
+model.add(Dense(258, input_shape=(144*15,), activation='relu')) # timesteps, features
+model.add(Dense(200, activation='relu')) 
+model.add(Dense(100, activation='relu'))
+model.add(Dense(50, activation='relu'))
+model.add(Dense(30))
 model.add(Dense(144))
 
 
@@ -201,7 +189,7 @@ mcp = ModelCheckpoint( # mcp는 ModelCheckpoint
     filepath = filepath,
 )
 
-model.fit(x_train, y_train, epochs=200, batch_size=500, validation_split=0.2, verbose=1, callbacks=[es, mcp])  # validation_split=0.1, mcp
+model.fit(x_train, y_train, epochs=1, batch_size=500, validation_split=0.2, verbose=1, callbacks=[es, mcp])  # validation_split=0.1, mcp
 
 end_time = time.time()
 
@@ -210,7 +198,9 @@ end_time = time.time()
 # model = load_model('C:/ai5/_data/kaggle/jena/')
 results = model.evaluate(x_test, y_test)  # results 결과 / evaluate 평가 / batch_size=300
 
+
 y_pred = model.predict(x_test2) # batch_size=300
+
 
 y_pred = np.array(y_pred).reshape(144, 1)  
 
@@ -276,3 +266,9 @@ print("걸린시간 : ", round(end_time - start_time, 2), "초")
 # 로스는 :  0.6138481497764587  / RMSE :  2.6234124142750543 / 걸린시간 :  430.46 초 <- 페이션 20, 에포 200 2
 
 # 1등 0.7나옴.
+
+###################### DNN으로 바꿈 ####################
+# 로스는 :  17.88628578186035 / 걸린시간 :  5.12 초 <- FMSE 빼버림.
+# 로스는 :  9.515119552612305 / 걸린시간 :  5.19 초 <- 현아님이 고쳐주심.
+# 로스는 :  11.41357421875   / RMSE :  3.8536935109444834 / 걸린시간 :  5.13 초
+# 

@@ -27,7 +27,7 @@ x = x.reshape(x.shape[0], x.shape[1], 1)
 # x_test = scaler.transform(x_test)
 
 #2. 모델
-model = Sequential()
+# model = Sequential()
 # model.add(LSTM(128, input_shape=(3,1)))    # LSTM, SimpleRNN, GRU
 # model.add(Dropout(0.25))
 # model.add(Dense(64, activation='relu'))
