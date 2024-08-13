@@ -33,7 +33,11 @@ loss = model.evaluate(x,y)
 results = model.predict([[10, 31, 211]])
 print('로스 : ', loss)
 print('[10, 31, 211]의 예측값 : ', results)
-np.set_printoptions(precision=3, suppress=True)
+
+np.set_printoptions(precision=3, suppress=True) 
+# 숫자를 예쁘게 보여주는 방법을 설정 / 
+# precision=3: 숫자를 소수점 아래 3자리까지만 보여주는 것
+# suppress=True: 숫자를 "e"(지수 표기법) 없이 그냥 보통 숫자처럼 보여주게 하는 거야.
 
 #[실습] 맹그러봐
 # X_predict = [10, 31, 211] 11과 0이 나오게.

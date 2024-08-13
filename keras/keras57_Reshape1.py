@@ -213,6 +213,8 @@ print("로스는 : ", loss[0])
 print("ACC : ", round(loss[1], 3))
 print("걸린시간 : ", round(end_time - start_time, 2), "초")
 
+# 대회에서 쓰지 말라고함. 채점할때 꼬일 수 있어서.
+
 # ACC 0.98 만들기
 # ACC :  0.918
 # ACC :  0.92
