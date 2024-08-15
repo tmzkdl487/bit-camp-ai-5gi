@@ -57,7 +57,7 @@ x_train = to_categorical(pad_x)
 
 # print(x_train.shape) # (20, 5, 48)
 
-x_preict = '태운이 참 재미없다'
+x_preict = '반장 재미있다.'      # '태운이 참 재미없다'
 
 x_pred = token.texts_to_sequences([x_preict])
 
@@ -87,7 +87,8 @@ loss = model.evaluate(x_train, lavels)
 
 final_predict = model.predict(x_pre_ohs)
 
-print("[예측]: 태운이 참 재미없다.", np.round(final_predict))
+# print("[예측]: 태운이 참 재미없다.", np.round(final_predict))
+print("[예측]: 반장 재미있다.", np.round(final_predict))
 print("ACC : ", round(loss[1], 3))
 
 # 
