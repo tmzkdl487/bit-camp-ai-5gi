@@ -26,7 +26,7 @@ docs = [
     '반장 주말에 출근 혜지 안혜지 안혜지'
 ]
 
-lavels = np.array([1,1,1,1,1,0,0,0,0,0,0,1,0,1,0, 1, 1, 0, 0, 0])  # 1이 긍정, 0이 부정
+labels = np.array([1,1,1,1,1,0,0,0,0,0,0,1,0,1,0, 1, 1, 0, 0, 0])  # 1이 긍정, 0이 부정
 
 token = Tokenizer() # 토큰 단위로 자른다.
 token.fit_on_texts(docs)
@@ -79,11 +79,11 @@ model.add(Dense(1, activation='sigmoid'))
 #3. 컴파일, 훈련
 model.compile(loss= 'binary_crossentropy', optimizer='adam', metrics=['acc'])
 
-model.fit(x_train, lavels, epochs=1000,)
+model.fit(x_train, labels, epochs=1000,)
 
 
 #4. 평가, 예측
-loss = model.evaluate(x_train, lavels)
+loss = model.evaluate(x_train, labels)
 
 final_predict = model.predict(x_pre_ohs)
 

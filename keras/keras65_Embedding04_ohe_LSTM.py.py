@@ -22,7 +22,7 @@ import numpy as np
 #     '준영이 바보', '반장 잘생겼다.', '태운이 또 구라친다.',
 # ]
 
-# lavels = np.array([1,1,1,1,1,0,0,0,0,0,0,1,0,1,0])  # 1이 긍정, 0이 부정
+# labels = np.array([1,1,1,1,1,0,0,0,0,0,0,1,0,1,0])  # 1이 긍정, 0이 부정
 
 # token = Tokenizer()
 # token.fit_on_texts(docs)
@@ -93,7 +93,7 @@ docs = [
     '준영이 바보', '반장 잘생겼다.', '태운이 또 구라친다.',
 ]
 
-lavels = np.array([1,1,1,1,1,0,0,0,0,0,0,1,0,1,0])  # 1이 긍정, 0이 부정
+labels = np.array([1,1,1,1,1,0,0,0,0,0,0,1,0,1,0])  # 1이 긍정, 0이 부정
 
 token = Tokenizer()
 token.fit_on_texts(docs)
