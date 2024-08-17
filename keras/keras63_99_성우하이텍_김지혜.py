@@ -10,7 +10,7 @@
 
 # 외부 데이터 사용시 c:\ai5\_data\중간고사데이터\
 
-from tensorflow.keras.models import Sequential, Model, load_model  
+from tensorflow.keras.models import Sequential, load_model  
 from tensorflow.keras.layers import Dense, LSTM, Dropout, Flatten,  Input, Concatenate , concatenate
 from tensorflow.keras.layers import Bidirectional, Conv1D, MaxPool1D  
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
@@ -192,14 +192,13 @@ x2_test = np.reshape(x1_test, (x2_test.shape[0], 20, 11))
 
 # 4. 평가, 예측
 print("==================== 2. MCP 출력 =========================")
-model = load_model('C:/ai5/_save/중간고사가중치/')
+model = load_model('C:/ai5/_save/중간고사가중치/keras63_99_성우하이텍_김지혜.hdf5')
 
 loss = model.evaluate([x1_test, x2_test], y_test)
 
-y_pred = model.predict([x1_1test, x2_3test])
+results = model.predict([x1_1test, x2_3test])
 
-print("성우하이텍 종가 : ", y_pred[0][0])
+print("성우하이텍 8월19일 종가 : ", results[0][0])
 print("로스는 : " , loss[0])
-# print("걸린시간 : ", round(end_time - start_time, 2), "초")
 
-# print("성우하이텍 8월19일 종가 : ", results )
+# 성우하이텍 8월19일 종가   7508.9375
