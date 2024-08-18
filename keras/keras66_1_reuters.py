@@ -59,10 +59,11 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 model = Sequential()
 model.add(Embedding(1000, 10))
 # model.add(Bidirectional(LSTM(128)))  # return_sequences=True    
-model.add(LSTM(64))
+model.add(LSTM(64, activation='relu'))
 model.add(Dense(46, activation='relu'))  
 # model.add(Dropout(0.1))
-model.add(Dense(50))    # activation='relu'
+model.add(Dense(50, activation='relu'))    # activation='relu'
+model.add(Dense(46))
 model.add(Dense(46, activation='softmax'))
 
 #3. 컴파일, 훈련
@@ -96,4 +97,7 @@ print("ACC : ", results)
 # ACC :  [1.8307873010635376, 0.687889575958252]  <- batch_size=100, activation='relu'뺌
 # ACC :  [1.820429801940918, 0.6847729086875916]  <- batch_size=100, activation='relu'뺌 2트
 # ACC :  [1.8411552906036377, 0.6754229664802551] <- activation='relu'넣어서 다시 돌림
-# <- 
+# ACC :  [2.030789613723755, 0.6869990825653076]  <- activation='relu'뺀 노드 1개 추가
+# ACC :  [1.457714319229126, 0.6821014881134033]  <- 코랩 점수
+# ACC :  [2.231283664703369, 0.6794301271438599]  <- activation='relu' 3개 넣음.
+# 
