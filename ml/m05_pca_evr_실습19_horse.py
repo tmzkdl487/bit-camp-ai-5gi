@@ -1,11 +1,10 @@
-# keras49_augment7_hores.py
-
 # keras41_ImageDataGernerator4_horse.py 복사
 
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D 
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+from tensorflow.keras.utils import to_categorical
 
 from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
@@ -17,76 +16,68 @@ import pandas as pd
 import time
 
 #1. 데이터
-np_path = 'c:/ai5/_data/_save_npy/'
-
-x_train = np.load(np_path + 'keras45_horse_02_x_train.npy')
-y_train = np.load(np_path + 'keras45_horse_02_y_train.npy')
-
-# print(x_train.shape, y_train.shape) # (1027, 100, 100, 3) (1027,)
-
-augment_size = 5000
-
-randidx = np.random.randint(x_train.shape[0], size=augment_size)    
-
-x_augmented = x_train[randidx].copy()   # .copy()하면 메모리값을 새로 할당하기 때문에 원래 메모리값에 영향을 미치지 않는다. 메모리 안전빵.
-y_augmented = y_train[randidx].copy()   #  x, y 5만개 준비됨.
-
 train_datagen = ImageDataGenerator(
     rescale=1./255,  # 스켈링한 데이터로 줘라, 수치화. 수치화만 하고 싶으면 밑에는 다 안써도 됨.
-    horizontal_flip=True,   # 수평 뒤집기
-    vertical_flip=True,     # 수직 뒤집기
-    width_shift_range=0.2,  # 평행이동 <- 위에 수평, 수직, 평행이동 데이터를 추가하면 8배의 데이터가 늘어난다.
-    # height_shift_range=0.1, # 평행이동 수직
-    rotation_range= 15,      # 정해진 각도만큼 이미지 회전 
-    # zoom_range=1.2,         # 축소 또는 확대
-    # shear_range=0.7,        # 좌표 하나를 고정시키고 다른 몇 개의 좌표를 이동시키는 변환.
-    fill_mode='nearest',    # 몇 개 더 있지만, 대표적으로 0도 있음. 너의 빈자리 비슷한 거로 채워줄께.
+    # horizontal_flip=True,   # 증폭하면 이미지 망가질 수 있어서 주석처리 하라고 하심.
+    # vertical_flip=True,    
+    # width_shift_range=0.1, 
+    # height_shift_range=0.1, 
+    # rotation_range= 5,   
+    # zoom_range=1.2,        
+    # shear_range=0.7,       
+    # fill_mode='nearest',   
 )
 
-x_augmented = train_datagen.flow(
-    x_augmented, y_augmented,
-    batch_size=augment_size,
-    shuffle=False,
-).next()[0]
+test_datagen = ImageDataGenerator(
+    rescale=1./255)
 
-x_train = np.concatenate((x_train, x_augmented))   
-y_train = np.concatenate((y_train, y_augmented))
+path_train = './_data/image/horse_human/'
 
-print(x_train.shape, y_train.shape) # (6027, 100, 100, 3) (6027,)
+start_time1 = time.time()
 
-exit()
+xy_train2 = train_datagen.flow_from_directory(
+    path_train, 
+    target_size=(10, 10), 
+    batch_size=1027, 
+    class_mode='binary',
+    color_mode='rgb',
+    shuffle=True
+) 
 
-pca = PCA(n_components=13)  
-x = pca.fit_transform(x)
+# print(xy_train2[0][0].shape, xy_train2[0][1].shape)  # (1027, 10, 10, 3) (1027,)
+
+# exit()
+
+xy_train = xy_train2[0][0].reshape(xy_train2[0][0].shape[0], xy_train2[0][0].shape[1]*xy_train2[0][0].shape[2]*xy_train2[0][0].shape[3])
+
+# print(xy_train.shape) # (1027, 300)
+
+# exit()
+
+pca = PCA(n_components=300)  
+xy_train = pca.fit_transform(xy_train)
 
 evr = pca.explained_variance_ratio_ 
 
 cumsum = np.cumsum(evr) 
 
-print(np.argmax(cumsum >= 0.95) +1)  # 2
-print(np.argmax(cumsum >= 0.99) +1)  # 3
-print(np.argmax(cumsum >= 0.999) +1) # 6
-print(np.argmax(cumsum >= 1.0) +1)   # 1
+# print(np.argmax(cumsum >= 0.95) +1)  # 73
+# print(np.argmax(cumsum >= 0.99) +1)  # 114
+# print(np.argmax(cumsum >= 0.999) +1) # 188
+# print(np.argmax(cumsum >= 1.0) +1)   # 1
 
-exit()
+# exit()
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.9, 
-                                                    random_state=4343,
-                                                    shuffle=True,
-                                                    )
+n = [73, 114, 188, 1]
 
-# print(x_train.shape, y_train.shape) # (455, 13) (455,)
-# print(x_test.shape, y_test.shape)   # (51, 13) (51,)
-
-n = [2, 3, 6, 1]
+y_train = to_categorical(xy_train2[0][1])
 
 # 결과 저장
 results = []
 
 for i in range(0, len(n), 1):
     pca = PCA(n_components=n[i])
-    x_train1 = pca.fit_transform(x_train)
-    x_test1 = pca.transform(x_test)
+    x_train1 = pca.fit_transform(xy_train)
     
     #2. 모델
     model = Sequential()
@@ -126,15 +117,32 @@ for i in range(0, len(n), 1):
     filepath = filepath,
     )
 
-    model.fit(x_train1, y_train, epochs=10, batch_size=64, verbose=0, validation_split=0.2,
+    model.fit(x_train1, xy_train2[0][1], epochs=10, batch_size=64, verbose=0, validation_split=0.2,
               callbacks=[es, mcp])
     
     end = time.time()
 
     #4. 평가, 예측
-    loss = model.evaluate(x_test1, y_test, verbose=0)
+    loss = model.evaluate(x_train1, xy_train2[0][1], verbose=0)
     
     print('===========================')
     print('결과 PCA :', n[i] )
     print('acc : ', loss[1])
     print('걸린 시간 : ', round(end - start, 2), "초")
+    
+# ===========================
+# 결과 PCA : 73
+# acc :  0.9931840300559998
+# 걸린 시간 :  4.0 초
+# ===========================
+# 결과 PCA : 114
+# acc :  0.9912366271018982
+# 걸린 시간 :  3.83 초
+# ===========================
+# 결과 PCA : 188
+# acc :  0.9931840300559998
+# 걸린 시간 :  4.0 초
+# ===========================
+# 결과 PCA : 1
+# acc :  0.6173320412635803
+# 걸린 시간 :  3.86 초    

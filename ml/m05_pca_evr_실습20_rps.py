@@ -1,6 +1,4 @@
-# keras49_augment8_rpg.py
-
-# keras45_03_save_npy_rps.py 복사
+# keras49_augment8_rpg.py 복사
 
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.models import Sequential, load_model
@@ -25,7 +23,7 @@ np_path = 'c:/ai5/_data/_save_npy/'
 x_train = np.load(np_path + 'keras45_rps_03_x_train.npy')
 y_train = np.load(np_path + 'keras45_rps_03_y_train.npy')
 
-print(x_train.shape, y_train.shape) # (2520, 80, 80, 3) (2520, 3)
+# print(x_train.shape, y_train.shape) # (2520, 80, 80, 3) (2520, 3)
 
 augment_size = 5000
 
@@ -55,26 +53,33 @@ x_augmented = train_datagen.flow(
 x_train = np.concatenate((x_train, x_augmented))   
 y_train = np.concatenate((y_train, y_augmented))
 
-print(x_train.shape, y_train.shape) # (6027, 100, 100, 3) (6027,)
+# print(x_train.shape, y_train.shape) # (6027, 100, 100, 3) (6027,)
 
-exit()
+x_train, x_test, y_train, y_test = train_test_split(x_train, y_train, train_size=0.8, shuffle=True, random_state=666)
 
-pca = PCA(n_components=13)  
-x = pca.fit_transform(x)
+x_train = x_train.reshape(x_train.shape[0], x_train.shape[1]*x_train.shape[2]*x_train.shape[3])
+x_test = x_test.reshape(x_test.shape[0], x_test.shape[1]*x_test.shape[2]*x_test.shape[3])
+
+# print(x_train.shape, x_test.shape)  # (6016, 19200) (1504, 19200)
+
+# exit()
+
+pca = PCA(n_components=None)  
+x_train = pca.fit_transform(x_train)
+x_test = pca.transform(x_test)
 
 evr = pca.explained_variance_ratio_ 
 
 cumsum = np.cumsum(evr) 
 
-print(np.argmax(cumsum >= 0.95) +1)  # 2
-print(np.argmax(cumsum >= 0.99) +1)  # 3
-print(np.argmax(cumsum >= 0.999) +1) # 6
-print(np.argmax(cumsum >= 1.0) +1)   # 1
+# print(np.argmax(cumsum >= 0.95) +1)  # 3
+# print(np.argmax(cumsum >= 0.99) +1)  # 52
+# print(np.argmax(cumsum >= 0.999) +1) # 401
+# print(np.argmax(cumsum >= 1.0) +1)   # 1
 
-exit()
+# exit()
 
-x_train, x_test, y_train, y_test = train_test_split(x_train, y_train, train_size=0.9, shuffle=True, random_state=666)
-n = [2, 3, 6, 1]
+n = [3, 52, 401, 1]
 
 # 결과 저장
 results = []
@@ -134,3 +139,21 @@ for i in range(0, len(n), 1):
     print('결과 PCA :', n[i] )
     print('acc : ', loss[1])
     print('걸린 시간 : ', round(end - start, 2), "초")
+    
+# ===========================
+# 결과 PCA : 3
+# acc :  0.6666663885116577
+# 걸린 시간 :  2.35 초
+# ===========================
+# 결과 PCA : 52
+# acc :  0.6666663885116577
+# 걸린 시간 :  1.93 초
+# ===========================
+# 결과 PCA : 401
+# acc :  0.6666663885116577
+# 걸린 시간 :  3.11 초
+# ===========================
+# 결과 PCA : 1
+# acc :  0.6666663885116577
+# 걸린 시간 :  3.02 초   
+    

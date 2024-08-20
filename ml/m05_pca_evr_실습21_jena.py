@@ -97,29 +97,27 @@ x_test2 = np.array(x_test2).reshape(1, 144*15)
 
 # exit()
 
-pca = PCA(n_components=13)  
+pca = PCA(n_components=2160)  
 x = pca.fit_transform(x)
 
 evr = pca.explained_variance_ratio_ 
 
 cumsum = np.cumsum(evr) 
 
-print(np.argmax(cumsum >= 0.95) +1)  # 2
-print(np.argmax(cumsum >= 0.99) +1)  # 3
-print(np.argmax(cumsum >= 0.999) +1) # 6
-print(np.argmax(cumsum >= 1.0) +1)   # 1
+# print(np.argmax(cumsum >= 0.95) +1)  # 33
+# print(np.argmax(cumsum >= 0.99) +1)  # 108
+# print(np.argmax(cumsum >= 0.999) +1) # 215
+# print(np.argmax(cumsum >= 1.0) +1)   # 2160
 
-exit()
+# exit()
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.9, 
                                                     random_state=4343,
                                                     shuffle=True,
                                                     )
 
-# print(x_train.shape, y_train.shape) # (455, 13) (455,)
-# print(x_test.shape, y_test.shape)   # (51, 13) (51,)
 
-n = [2, 3, 6, 1]
+n = [33, 108, 215, 2160]
 
 # 결과 저장
 results = []
@@ -167,7 +165,7 @@ for i in range(0, len(n), 1):
     filepath = filepath,
     )
 
-    model.fit(x_train1, y_train, epochs=10, batch_size=64, verbose=0, validation_split=0.2,
+    model.fit(x_train1, y_train, epochs=1, batch_size=64, verbose=0, validation_split=0.2,
               callbacks=[es, mcp])
     
     end = time.time()
@@ -179,3 +177,20 @@ for i in range(0, len(n), 1):
     print('결과 PCA :', n[i] )
     print('acc : ', loss[1])
     print('걸린 시간 : ', round(end - start, 2), "초")
+    
+# ===========================
+# 결과 PCA : 33
+# acc :  0.000434412359027192
+# 걸린 시간 :  21.95 초
+# ===========================
+# 결과 PCA : 108
+# acc :  0.0004912542644888163
+# 걸린 시간 :  24.52 초
+# ===========================
+# 결과 PCA : 215
+# acc :  0.0004679557168856263
+# 걸린 시간 :  24.99 초
+# ===========================
+# 결과 PCA : 2160
+# acc :  0.00035162773565389216
+# 걸린 시간 :  31.54 초
