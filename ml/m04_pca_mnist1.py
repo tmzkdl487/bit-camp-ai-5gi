@@ -31,7 +31,7 @@ x = x.reshape(x.shape[0], x.shape[1]*x.shape[2])
 
 # exit()  
 
-pca = PCA(n_components=784)  
+pca = PCA(n_components=600)  
 x = pca.fit_transform(x)
 
 evr = pca.explained_variance_ratio_ 
