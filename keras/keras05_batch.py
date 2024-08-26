@@ -12,6 +12,10 @@ y = np.array([1,2,3,5,4,6])
 # 에포는 100으로 고정을 풀어주겠노라!!!
 # 로스 기준 0.31 미만!!!
 
+# print(x.shape, y.shape) # (6,) (6,)
+
+# exit()
+
 #2. 모델
 model = Sequential()
 model.add(Dense(3, input_dim=1))
