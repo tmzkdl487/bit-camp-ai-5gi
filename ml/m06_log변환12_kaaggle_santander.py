@@ -93,6 +93,6 @@ sample_submission_csv.to_csv(path + "sampleSubmission_0724_1630.csv")
 
 ### LR (LinearRegression)###
 # 로그 변환 전 : score :  0.18207788643809508
-#  x 변환 후   : ValueError: Input contains NaN, infinity or a value too large for dtype('float64'). / 음수라서 안되나봄.
+#  x 변환 후   : ValueError: Input contains NaN, infinity or a value too large for dtype('float64'). / 음수라서 안되나봄. -> 선생님이 스켈링하라고 하심.
 #  y 변환 후   : score :  0.18207788643809475
 #  x, y 둘다   : ValueError: Input contains NaN, infinity or a value too large for dtype('float64').
