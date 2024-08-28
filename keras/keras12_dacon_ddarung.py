@@ -8,22 +8,22 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 
 #1. 데이터
-path = "./_data/따릉이/"
+path = "C:/ai5/_data/dacon/따릉이/"
 
 train_csv = pd.read_csv(path + "train.csv", index_col=0)    # 인덱스 없으면 index_col쓰면 안됨. 0은 0번째 줄 없앴다는 뜻이다.
-print(train_csv)    # [1459 rows x 10 columns]
+# print(train_csv)    # [1459 rows x 10 columns]
 
 test_csv = pd.read_csv(path + "test.csv", index_col=0)
-print(test_csv) # [715 rows x 9 columns]
+# print(test_csv) # [715 rows x 9 columns]
 
 submission_csv = pd.read_csv(path + "submission.csv", index_col=0)
-print(submission_csv)   # [715 rows x 1 columns]
+# print(submission_csv)   # [715 rows x 1 columns]
 
-print(train_csv.shape)  # (1459, 10)
-print(test_csv.shape) # (715, 9)
-print(submission_csv.shape) # (715, 1)
+# print(train_csv.shape)  # (1459, 10)
+# print(test_csv.shape) # (715, 9)
+# print(submission_csv.shape) # (715, 1)
 
-print(train_csv.columns)    # 열의 이름을 알려달라는 수식. 
+# print(train_csv.columns)    # 열의 이름을 알려달라는 수식. 
 # Index(['hour', 'hour_bef_temperature', 'hour_bef_precipitation',
 #        'hour_bef_windspeed', 'hour_bef_humidity', 'hour_bef_visibility',
 #        'hour_bef_ozone', 'hour_bef_pm10', 'hour_bef_pm2.5', 'count'],
