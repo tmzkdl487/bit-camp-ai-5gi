@@ -81,7 +81,6 @@ y_predict = model.predict(x_test)
 print('Mean Squared Error : ', mean_squared_error(y_test, y_predict))
 print('R^2 Score : ', r2_score(y_test, y_predict))
 
-
 y_pred_best = model.best_estimator_.predict(x_test) # 이게 제일 나음.
 # print('최적 튠 ACC : ', accuracy_score(y_test, y_pred_best))
 # 최적의 파라미터로 설정된 모델의 정확도를 계산하고 보여줍니다. 
