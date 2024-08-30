@@ -61,7 +61,7 @@ y_predict2 = best_model.predict(x_test)
 # results2 = best_model.evaluate(x_test, y_test)
 # print('best_model 결과 : ', results)
 
-print('걸린시간 : ', round(end_time - start_time, 2), '초')
+# print('걸린시간 : ', round(end_time - start_time, 2), '초')
 
 # TypeError: Unable to serialize [2.0896919 2.1128857 2.1081853] to JSON. Unrecognized type <class 'tensorflow.python.framework.ops.EagerTensor'>.
 # 사영님 돌렸는데 10시간 걸렸다고 함. / 사영님: ACC 0.989 나옴. / 태운님: 97.5 나옴. 
