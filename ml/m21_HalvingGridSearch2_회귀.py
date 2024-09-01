@@ -24,8 +24,8 @@ x, y = load_diabetes(return_X_y=True)
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=15426, shuffle=True, train_size=0.8,)    # stratify=y
 
-# print(x_train.shape, y_train.shape) # 
-# print(x_test.shape, y_test.shape)   # 
+# print(x_train.shape, y_train.shape) # (353, 10) (353,)
+# print(x_test.shape, y_test.shape)   # (89, 10) (89,)
 
 n_splits = 5 
 kfold = KFold(n_splits=n_splits, shuffle=True, random_state=333)
@@ -52,9 +52,9 @@ model = HalvingGridSearchCV(XGBRFRegressor(
                     #  n_jobs=-1,
                     #  n_iter=10,
                      random_state=4325,
-                     factor= 2.5,   #  HalvingGridSearchCV는 성능이 가장 낮은 절반의 조합을 제거합니다. factor=2이므로 절반으로 줄어듭니다.
-                     min_resources= 150,
-                     max_resources= 1437,
+                     factor= 2,   #  HalvingGridSearchCV는 성능이 가장 낮은 절반의 조합을 제거합니다. factor=2이므로 절반으로 줄어듭니다.
+                     min_resources= 20,
+                     max_resources= 353,
                      aggressive_elimination=True,
                      )
 
@@ -84,17 +84,27 @@ y_pred_best = model.best_estimator_.predict(x_test)
 print('최적 튠 ACC : ', r2_score(y_test, y_pred_best))
 print('걸린 시간 :', round(end_time - start_time, 2), '초')
 
-# n_iterations: 4
-# n_required_iterations: 4
-# n_possible_iterations: 4
-# min_resources_: 30
+# n_iterations: 7
+# n_required_iterations: 7
+# n_possible_iterations: 5
+# min_resources_: 50
 # max_resources_: 1437
 # aggressive_elimination: True
-# factor: 3.2
-
+# factor: 2
 # ----------
 # iter: 0
 # n_candidates: 84
-# n_resources: 30
+# n_resources: 50
 # Fitting 5 folds for each of 84 candidates, totalling 420 fits
+# ----------
+# iter: 1
+# n_candidates: 42
+# n_resources: 50
+# Fitting 5 folds for each of 42 candidates, totalling 210 fits
+# ----------
+# iter: 2
+# n_candidates: 21
+# n_resources: 50
+# Fitting 5 folds for each of 21 candidates, totalling 105 fits
+
 

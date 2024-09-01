@@ -180,4 +180,20 @@ print('걸린 시간 :', round(end_time - start_time, 2), '초')
 # 걸린 시간 : 275.27 초
 
 ### min_resources= 30, max_resources= 1437, aggressive_elimination=True,###
-
+# 최적의 매개변수 : XGBClassifier(base_score=None, booster=None, callbacks=None,
+#               colsample_bylevel=None, colsample_bynode=None,
+#               colsample_bytree=0.7, device='cuda', early_stopping_rounds=None,
+#               enable_categorical=False, eval_metric=None, feature_types=None,
+#               gamma=None, grow_policy=None, importance_type=None,
+#               interaction_constraints=None, learning_rate=0.2, max_bin=None,
+#               max_cat_threshold=None, max_cat_to_onehot=None,
+#               max_delta_step=None, max_depth=None, max_leaves=None,
+#               min_child_weight=None, missing=nan, monotone_constraints=None,
+#               multi_strategy=None, n_estimators=50, n_jobs=None,
+#               num_parallel_tree=None, objective='multi:softprob', ...)
+# 최적의 파라미터 {'colsample_bytree': 0.7, 'learning_rate': 0.2}
+# best_score :  0.953153320918684
+# model.score : 0.9666666666666667
+# accuracy_score : 0.9666666666666667
+# accuracy_score : 0.9666666666666667
+# 걸린 시간 : 2805.21 초
