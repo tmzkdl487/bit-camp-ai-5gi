@@ -10,7 +10,6 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, shuffle=True, random_s
                                                     train_size=0.8,
                                                     stratify=y,)
 
-
 best_score = 0
 
 for gamma in [0.001, 0.01, 0.1, 1, 10, 100]:
