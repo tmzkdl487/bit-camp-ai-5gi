@@ -13,7 +13,7 @@ from xgboost import XGBRFRegressor
 import xgboost as xgb
 
 from sklearn.experimental import enable_halving_search_cv
-from sklearn.model_selection import HalvingGridSearchCV 
+from sklearn.model_selection import HalvingGridSearchCV, HalvingRandomSearchCV 
 # HalvingGridSearchCV 쓰려면은 enable_halving_search_cv을 꼭 위에 임포트해야된다.
 
 import warnings
@@ -39,7 +39,7 @@ parameters = [
    ] # 5*5*4
 
 #2. 모델
-model = HalvingGridSearchCV(XGBRFRegressor(
+model = HalvingRandomSearchCV(XGBRFRegressor(
                                           # tree_method='gpu_hist'
                                           tree_method='hist',
                                           device='cuda',
@@ -84,71 +84,4 @@ y_pred_best = model.best_estimator_.predict(x_test)
 print('최적 튠 ACC : ', r2_score(y_test, y_pred_best))
 print('걸린 시간 :', round(end_time - start_time, 2), '초')
 
-# n_iterations: 7
-# n_required_iterations: 7
-# n_possible_iterations: 5
-# min_resources_: 20
-# n_required_iterations: 7
-# n_possible_iterations: 5
-# min_resources_: 20
-# min_resources_: 20
-# max_resources_: 353
-# aggressive_elimination: True
-# aggressive_elimination: True
-# factor: 2
-# ----------
-# iter: 0
-# n_candidates: 84
-# n_resources: 20
-# Fitting 5 folds for each of 84 candidates, totalling 420 fits
-# ----------
-# iter: 1
-# n_candidates: 42
-# n_resources: 20
-# Fitting 5 folds for each of 42 candidates, totalling 210 fits
-# ----------
-# iter: 2
-# n_candidates: 21
-# n_resources: 20
-# Fitting 5 folds for each of 21 candidates, totalling 105 fits
-# ----------
-# iter: 3
-# n_candidates: 11
-# n_resources: 40
-# Fitting 5 folds for each of 11 candidates, totalling 55 fits
-# ----------
-# iter: 4
-# n_candidates: 6
-# n_resources: 80
-# Fitting 5 folds for each of 6 candidates, totalling 30 fits
-# ----------
-# iter: 5
-# n_candidates: 3
-# n_resources: 160
-# Fitting 5 folds for each of 3 candidates, totalling 15 fits
-# ----------
-# iter: 6
-# n_candidates: 2
-# n_resources: 320
-# Fitting 5 folds for each of 2 candidates, totalling 10 fits
-# 최적의 매개변수 : XGBRFRegressor(base_score=None, booster=None, callbacks=None,
-#                colsample_bylevel=None, colsample_bytree=None, device='cuda',
-#                early_stopping_rounds=None, enable_categorical=False,
-#                eval_metric=None, feature_types=None, gamma=None,
-#                grow_policy=None, importance_type=None,
-#                interaction_constraints=None, learning_rate=0.3, max_bin=None,
-#                max_cat_threshold=None, max_cat_to_onehot=None,
-#                max_delta_step=None, max_depth=None, max_leaves=None,
-#                min_child_weight=None, missing=nan, monotone_constraints=None,
-#                multi_strategy=None, n_estimators=50, n_jobs=None,
-#                num_parallel_tree=None, objective='reg:squarederror',
-#                random_state=None, ...)
-# 최적의 파라미터 {'learning_rate': 0.3, 'subsample': 0.8}
-# best_score :  0.22054414174676457
-# model.score : 0.16285397513501576
-# Mean Squared Error :  3932.0360916943623
-# R^2 Score :  0.16285397513501576
-# 최적 튠 ACC :  0.16285397513501576
-# 걸린 시간 : 450.39 초
-
-
+# 
