@@ -1,7 +1,6 @@
 import numpy as np
-from sklearn.datasets import fetch_california_housing
+from sklearn.datasets import load_diabetes
 from sklearn.model_selection import train_test_split
-
 from sklearn.preprocessing import MinMaxScaler
 from xgboost import XGBClassifier, XGBRegressor
 from sklearn.metrics import accuracy_score, r2_score
@@ -12,7 +11,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 #1. 데이터
-x, y = fetch_california_housing(return_X_y=True)
+x, y = load_diabetes(return_X_y=True)
 
 random_state=777
 x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=random_state,
@@ -96,17 +95,17 @@ end_time = time.time()
 print(bay.max)
 print(n_iter, '번 걸린시간 : ', round(end_time - start_time, 2), '초')
 
-# {'target': 0.8436190845113714, 
-# 'params': 
-# {'colsample_bytree': 0.8200455412009147, 
-# 'learning_rate': 0.1,
-# 'max_bin': 132.75130327378758, 
-# 'max_depth': 10.0, 
-# 'min_child_samples': 181.10264016071278, 
-# 'min_child_weight': 40.11596063756949, 
-# 'num_leaves': 28.918322162380235, 
-# 'reg_alpha': 0.01, 
-# 'reg_lambda': 9.935375084796, 
-# 'subsample': 0.8233278955102336}}
-# 500 번 걸린시간 :  571.6 초
+# {'target': 0.5314456178765334, 
+# 'params': {'colsample_bytree': 1.0, 
+# 'learning_rate': 0.1, 
+# 'max_bin': 488.2196846667095, 
+# 'max_depth': 7.5133448850347095, 
+# 'min_child_samples': 37.27496998974293, 
+# 'min_child_weight': 48.101106450051994, 
+# 'num_leaves': 31.298565747670082, 
+# 'reg_alpha': 5.992482176494196, 
+# 'reg_lambda': 6.609217142366147, 
+# 'subsample': 0.5309987865960674}}
+# 500 번 걸린시간 :  413.7 초
+
 

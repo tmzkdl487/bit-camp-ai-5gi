@@ -1,25 +1,56 @@
+import pandas as pd
 import numpy as np
-from sklearn.datasets import fetch_california_housing
-from sklearn.model_selection import train_test_split
+
+from sklearn.model_selection import train_test_split, KFold
+from sklearn.model_selection import StratifiedKFold, GridSearchCV, RandomizedSearchCV
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import mean_squared_error, r2_score
+import time
+
+import xgboost as xgb
 
 from sklearn.preprocessing import MinMaxScaler
-from xgboost import XGBClassifier, XGBRegressor
-from sklearn.metrics import accuracy_score, r2_score
+from xgboost import XGBClassifier
 from bayes_opt import BayesianOptimization
-import time
 
 import warnings
 warnings.filterwarnings('ignore')
 
 #1. 데이터
-x, y = fetch_california_housing(return_X_y=True)
+path = 'C://ai5//_data//kaggle//otto-group-product-classification-challenge//'
 
-random_state=777
-x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=random_state,
-                                                    shuffle=True, 
-                                                    train_size=0.8,
-                                                    # stratify=y
-                                                    )
+train_csv = pd.read_csv(path + "train.csv", index_col=0)    # 분류
+# print(train_csv)    # [61878 rows x 94 columns]
+ 
+test_csv = pd.read_csv(path + "test.csv", index_col= 0)
+# print(test_csv)   # [144368 rows x 93 columns]
+    
+sampleSubmission_csv = pd.read_csv(path + "sampleSubmission.csv", index_col=0)
+# print(train_csv.shape, test_csv.shape, sampleSubmission_csv.shape)
+# (61878, 94) (144368, 93) (144368, 9)
+
+# [누리님 조언] 타겟을 숫자로 바꾼다.
+from sklearn.preprocessing import LabelEncoder
+encoder = LabelEncoder()
+train_csv['target'] = encoder.fit_transform(train_csv['target'])
+
+x = train_csv.drop(['target'], axis=1)
+# print(x)    # [61878 rows x 93 columns]
+
+y = train_csv['target']
+# print(y.shape)  # (61878,)
+
+y_ohe = pd.get_dummies(y)
+# print(y_ohe.shape) 
+
+# print(x.shape, y.shape) # (61878, 93) (61878,)
+
+# exit()
+
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y, train_size=0.8, shuffle=True, random_state=3333, stratify=y
+)
 
 scaler = MinMaxScaler()
 x_train = scaler.fit_transform(x_train)
@@ -66,7 +97,7 @@ def xgb_hamsu(learning_rate, max_depth,
     save_best=True,
     )
     
-    model = XGBRegressor(**params, n_jobs=-1,
+    model = XGBClassifier(**params, n_jobs=-1,
                             tree_method='hist',
                             device='cuda',
                             # eval_metric='mlogloss',
@@ -74,12 +105,11 @@ def xgb_hamsu(learning_rate, max_depth,
     
     model.fit(x_train, y_train,
               eval_set=[(x_test, y_test)],
-            #   eval_metric='logloss',
+            #   eval_metric='mlogloss',
               verbose=0,
               )
     y_predict = model.predict(x_test)
-    # results = accuracy_score(y_test, y_predict)
-    results = r2_score(y_test, y_predict)
+    results = accuracy_score(y_test, y_predict)
     return results
 
 bay = BayesianOptimization(
@@ -88,7 +118,7 @@ bay = BayesianOptimization(
     random_state=333,
 )
 
-n_iter = 500
+n_iter = 100
 start_time = time.time()
 bay.maximize(init_points=5, n_iter=n_iter)
 end_time = time.time()
@@ -96,17 +126,15 @@ end_time = time.time()
 print(bay.max)
 print(n_iter, '번 걸린시간 : ', round(end_time - start_time, 2), '초')
 
-# {'target': 0.8436190845113714, 
-# 'params': 
-# {'colsample_bytree': 0.8200455412009147, 
-# 'learning_rate': 0.1,
-# 'max_bin': 132.75130327378758, 
+# {'target': 0.8235294117647058, 
+# 'params': {'colsample_bytree': 0.9433726102176561,
+# 'learning_rate': 0.1, 
+# 'max_bin': 64.25065410099377, 
 # 'max_depth': 10.0, 
-# 'min_child_samples': 181.10264016071278, 
-# 'min_child_weight': 40.11596063756949, 
-# 'num_leaves': 28.918322162380235, 
+# 'min_child_samples': 24.03562733326326, 
+# 'min_child_weight': 1.0, 
+# 'num_leaves': 40.0, 
 # 'reg_alpha': 0.01, 
-# 'reg_lambda': 9.935375084796, 
-# 'subsample': 0.8233278955102336}}
-# 500 번 걸린시간 :  571.6 초
-
+# 'reg_lambda': -0.001, 
+# 'subsample': 0.5}}
+# 100 번 걸린시간 :  900.76 초

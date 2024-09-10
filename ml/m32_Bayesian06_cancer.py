@@ -1,11 +1,14 @@
-import numpy as np
 from sklearn.datasets import load_breast_cancer
+
 from sklearn.model_selection import train_test_split
+import numpy as np
+import time
+
+from sklearn.metrics import accuracy_score, r2_score
+
 from sklearn.preprocessing import MinMaxScaler
 from xgboost import XGBClassifier
-from sklearn.metrics import accuracy_score, r2_score
 from bayes_opt import BayesianOptimization
-import time
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -80,3 +83,16 @@ end_time = time.time()
 
 print(bay.max)
 print(n_iter, '번 걸린시간 : ', round(end_time - start_time, 2), '초')
+
+# {'target': 1.0, 
+# 'params': {'colsample_bytree': 0.7318557641603434, 
+# 'learning_rate': 0.1, 
+# 'max_bin': 323.242176997515, 
+# 'max_depth': 3.0, 
+# 'min_child_samples': 112.19567219059498, 
+# 'min_child_weight': 12.12643068830938, 
+# 'num_leaves': 36.15475318517358, 
+# 'reg_alpha': 0.01, 
+# 'reg_lambda': 10.0, 
+# 'subsample': 1.0}}
+# 500 번 걸린시간 :  257.08 초

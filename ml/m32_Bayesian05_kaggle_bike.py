@@ -1,25 +1,37 @@
+import pandas as pd
 import numpy as np
-from sklearn.datasets import fetch_california_housing
-from sklearn.model_selection import train_test_split
+import time
+
+from sklearn.model_selection import train_test_split, KFold
+from sklearn.model_selection import StratifiedKFold, GridSearchCV, RandomizedSearchCV
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, mean_squared_error, r2_score
+
+from xgboost import XGBClassifier, XGBRegressor
+import xgboost as xgb
 
 from sklearn.preprocessing import MinMaxScaler
-from xgboost import XGBClassifier, XGBRegressor
-from sklearn.metrics import accuracy_score, r2_score
 from bayes_opt import BayesianOptimization
-import time
 
 import warnings
 warnings.filterwarnings('ignore')
 
 #1. 데이터
-x, y = fetch_california_housing(return_X_y=True)
+path = 'C://ai5/_data/kaggle//bike-sharing-demand/'  
 
-random_state=777
-x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=random_state,
+train_csv = pd.read_csv(path + "train.csv", index_col=0)
+test_csv = pd.read_csv(path + "test.csv", index_col=0)
+sampleSubmission = pd.read_csv(path + "sampleSubmission.csv", index_col=0)
+
+x  = train_csv.drop(['casual', 'registered', 'count'], axis=1)   
+
+y = train_csv['count']
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, 
                                                     shuffle=True, 
-                                                    train_size=0.8,
+                                                    random_state=3333,
                                                     # stratify=y
-                                                    )
+                                                    ) 
 
 scaler = MinMaxScaler()
 x_train = scaler.fit_transform(x_train)
@@ -96,17 +108,19 @@ end_time = time.time()
 print(bay.max)
 print(n_iter, '번 걸린시간 : ', round(end_time - start_time, 2), '초')
 
-# {'target': 0.8436190845113714, 
-# 'params': 
-# {'colsample_bytree': 0.8200455412009147, 
-# 'learning_rate': 0.1,
-# 'max_bin': 132.75130327378758, 
+# {'target': 0.3984776735305786, 
+# 'params': {'colsample_bytree': 1.0, 
+# 'learning_rate': 0.1, 
+# 'max_bin': 466.9720976730107, 
 # 'max_depth': 10.0, 
-# 'min_child_samples': 181.10264016071278, 
-# 'min_child_weight': 40.11596063756949, 
-# 'num_leaves': 28.918322162380235, 
-# 'reg_alpha': 0.01, 
-# 'reg_lambda': 9.935375084796, 
-# 'subsample': 0.8233278955102336}}
-# 500 번 걸린시간 :  571.6 초
+# 'min_child_samples': 92.67003044517622, 
+# 'min_child_weight': 1.0, 
+# 'num_leaves': 30.86524472728791, 
+# 'reg_alpha': 44.15870624561117, 
+# 'reg_lambda': 10.0, 
+# 'subsample': 0.9614105580898901}}
+# 500 번 걸린시간 :  542.98 초
+
+
+
 
