@@ -88,8 +88,8 @@ def cat_hamsu(learning_rate, depth,
               )
     
     y_predict = model.predict(x_test)
-    # results = accuracy_score(y_test, y_predict)
-    results = r2_score(y_test, y_predict)
+    results = accuracy_score(y_test, y_predict)
+    # results = r2_score(y_test, y_predict)
     return results
 
 bay = BayesianOptimization(
@@ -105,3 +105,12 @@ end_time = time.time()
 
 print(bay.max)
 print(n_iter, '번 걸린시간 : ', round(end_time - start_time, 2), '초')
+
+# {'target': 0.923275, 
+# 'params': {'bagging_temperature': 1.5945913327416066, 
+# 'border_count': 77.37886624215638, 
+# 'depth': 5.178066942487869, 
+# 'l2_leaf_reg': 5.241276267876562, 
+# 'learning_rate': 0.2, 
+# 'random_strength': 5.131729298012553}}
+# 100 번 걸린시간 :  919.38 초

@@ -86,4 +86,11 @@ end_time = time.time()
 print(bay.max)
 print(n_iter, '번 걸린시간 : ', round(end_time - start_time, 2), '초')
 
-# 
+# {'target': 1.0, 
+# 'params': {'bagging_temperature': 2.7164554351261727, 
+# 'border_count': 194.55601232147853, 
+# 'depth': 4.135051568318308, 
+# 'l2_leaf_reg': 3.9730492262239494, 
+# 'learning_rate': 0.08005714672806884, 
+# 'random_strength': 1.4347329917454106}}
+# 100 번 걸린시간 :  2293.85 초
