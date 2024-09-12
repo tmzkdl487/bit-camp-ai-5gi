@@ -121,3 +121,13 @@ print('model.best_params_: ', best_params)
 print('model.best_estimator_: ', best_model)
 print('model.score: ', best_model.evaluate(x_test, y_test))
 
+# Bayesian Optimization 걸린시간 :  91.02
+# 최적 하이퍼파라미터: {'target': -0.04533148556947708, 'params': {'drop': 0.4708042562663982, 'lr': 0.003222577599869186, 'node1': 108.1641406449259, 'node2': 27.51925994843917, 'node3': 26.03365620532531, 'node4': 43.31982591710857, 'node5': 36.99692382302527}}
+
+# 걸린시간 :  5.26
+# 최종 테스트 손실(MSE): 0.015026023611426353
+# 최종 테스트 MAE: 0.06446181982755661
+# model.best_params_:  {'drop': 0.4708042562663982, 'lr': 0.003222577599869186, 'node1': 108.1641406449259, 'node2': 27.51925994843917, 'node3': 26.03365620532531, 'node4': 43.31982591710857, 'node5': 36.99692382302527}
+# model.best_estimator_:  <keras.engine.functional.Functional object at 0x0000020EBEC55280>
+# 4/4 [==============================] - 0s 5ms/step - loss: 0.0150 - mae: 0.0645
+# model.score:  [0.015026023611426353, 0.06446181982755661]
