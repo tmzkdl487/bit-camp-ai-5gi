@@ -23,7 +23,7 @@ x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
 
 #2. 모델
-model = DecisionTreeRegressor()
+# model = DecisionTreeRegressor()
 
 # model = BaggingRegressor(DecisionTreeRegressor(),
 #                           n_estimators =100,
@@ -45,13 +45,13 @@ model = DecisionTreeRegressor()
 
 # model = RandomForestRegressor()
 
-# model = BaggingRegressor(RandomForestRegressor(),
-#                           n_estimators =100,
-#                           n_jobs = -1,
-#                           random_state=4444, 
-#                         #   bootstrap=True,   # 디폴트, 중복 허용
-#                           bootstrap=False     # 중복허용 안함.
-#                           )
+model = BaggingRegressor(RandomForestRegressor(),
+                          n_estimators =100,
+                          n_jobs = -1,
+                          random_state=4444, 
+                        #   bootstrap=True,   # 디폴트, 중복 허용
+                          bootstrap=False     # 중복허용 안함.
+                          )
 
 #3. 훈련
 model.fit(x_train, y_train)
@@ -65,30 +65,40 @@ y_predict = model.predict(x_test)
 # print('acc_score: ', acc)
 
 r2 = r2_score(y_test, y_predict)
-print('r2_score', r2)
+print('r2_score : ', r2)
 
 # 디시전
-
+# 최종점수 :  -0.1979034754639204
+# r2_score : -0.1979034754639204
 
 # 디시전 배깅 부트스트랩 투루
-
+# 최종점수 :  0.48279172586722796
+# r2_score :  0.48279172586722796
 
 # 디시전 배깅 부트스트랩 펄스
+# 최종점수 :  -0.18342750888969794
+# r2_score :  -0.18342750888969794
 
+# 리니어
+# 최종점수 :  0.5262207027929591
+# r2_score :  0.5262207027929591
 
-# 로지스틱
+# 리니어 배깅, 부두스트랩 투루
+# 최종점수 :  0.524821185945685
+# r2_score :  0.524821185945685
 
-
-# 로지스틱 배깅, 부두스트랩 투루
-
-
-# 로지스틱 배깅, 부투스트랩  펄스
-
+# 리니어 배깅, 부투스트랩  펄스
+# 최종점수 :  0.5262207027929591
+# r2_score :  0.5262207027929591
 
 # 랜포
-
+# 최종점수 :  0.4830098329496503
+# r2_score :  0.4830098329496503
 
 # 랜포배깅, 부투스트랩  투루
-
+# 최종점수 :  0.5287592525821849
+# r2_score :  0.5287592525821849
 
 # 랜포배깅, 부투스트랩  펄스
+# 최종점수 :  0.49717253613568513
+# r2_score :  0.49717253613568513

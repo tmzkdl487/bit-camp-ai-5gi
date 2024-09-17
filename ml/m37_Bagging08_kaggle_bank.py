@@ -53,13 +53,14 @@ x_test = scaler.transform(x_test)
 
 #2. 모델
 # model = DecisionTreeClassifier()
-model = BaggingClassifier(DecisionTreeClassifier(),
-                          n_estimators =100,
-                          n_jobs = -1,
-                          random_state=4444, 
-                        #   bootstrap=True,   # 디폴트, 중복 허용
-                          bootstrap=False     # 중복허용 안함.
-                          )
+
+# model = BaggingClassifier(DecisionTreeClassifier(),
+#                           n_estimators =100,
+#                           n_jobs = -1,
+#                           random_state=4444, 
+#                           bootstrap=True,   # 디폴트, 중복 허용
+#                           # bootstrap=False     # 중복허용 안함.
+#                           )
 
 # model = LogisticRegression()
 
@@ -67,16 +68,7 @@ model = BaggingClassifier(DecisionTreeClassifier(),
 #                           n_estimators =100,
 #                           n_jobs = -1,
 #                           random_state=4444, 
-#                           bootstrap=True,   # 디폴트, 중복 허용
-#                         #   bootstrap=False     # 중복허용 안함.
-#                           )
-
-
-# model = BaggingClassifier(RandomForestClassifier(),
-#                           n_estimators =100,
-#                           n_jobs = -1,
-#                           random_state=4444, 
-#                         #   bootstrap=True,   # 디폴트, 중복 허용
+#                           # bootstrap=True,   # 디폴트, 중복 허용
 #                           bootstrap=False     # 중복허용 안함.
 #                           )
 
@@ -86,7 +78,7 @@ model = BaggingClassifier(RandomForestClassifier(),
                           n_estimators =100,
                           n_jobs = -1,
                           random_state=4444, 
-                        #   bootstrap=True,   # 디폴트, 중복 허용
+                          # bootstrap=True,   # 디폴트, 중복 허용
                           bootstrap=False     # 중복허용 안함.
                           )
 
@@ -101,29 +93,37 @@ y_predict = model.predict(x_test)
 acc = accuracy_score(y_test, y_predict)
 print('acc_score: ', acc)
 
-
 # 디시전
-
+# 최종점수 :  0.7957100009088981
+# acc_score:  0.7957100009088981
 
 # 디시전 배깅 부트스트랩 투루
-
+# 최종점수 :  0.8553943102978157
+# acc_score:  0.8553943102978157
 
 # 디시전 배깅 부트스트랩 펄스
-
+# 최종점수 :  0.7984366952464629
+# acc_score:  0.7984366952464629
 
 # 로지스틱
-
+# 최종점수 :  0.8243705880570789
+# acc_score:  0.8243705880570789
 
 # 로지스틱 배깅, 부두스트랩 투루
-
+# 최종점수 :  0.8244311812645803
+# acc_score:  0.8244311812645803
 
 # 로지스틱 배깅, 부투스트랩  펄스
-
+# 최종점수 :  0.8243705880570789
+# acc_score:  0.8243705880570789
 
 # 랜포
-
+# 최종점수 :  0.8585754536916411
+# acc_score:  0.8585754536916411
 
 # 랜포배깅, 부투스트랩  투루
-
+# 최종점수 :  0.861726300481716
+# acc_score:  0.861726300481716
 
 # 랜포배깅, 부투스트랩  펄스
+# OSError: [WinError 1450] 시스템 리소스가 부족하기 때문에 요청한 서비스를 완성할 수 없습니다
