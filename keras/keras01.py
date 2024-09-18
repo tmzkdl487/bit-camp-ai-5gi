@@ -23,5 +23,5 @@ model.fit(x, y, epochs=10)
 result = model.predict(np.array([4]))
 print("4의 예측값 : ", result)
 
-#4의 예측값 :  [[1.675651]]
-# 
+# 4의 예측값 :  [[1.675651]]
+# 4의 예측값 :  [[6.109565]]
