@@ -120,7 +120,6 @@ x = pca.fit_transform(x)
 
 # exit()
 
-
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.75, 
                                                     random_state=4343,
                                                     shuffle=True,
