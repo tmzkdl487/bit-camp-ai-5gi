@@ -3,6 +3,10 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
+USE_CUDA = torch.cuda.is_available()
+DEVICE = torch.device('cuda' if USE_CUDA else 'cpu')
+print('torch : ', torch.__version__, '사용DEVICE : ', DEVICE)
+
 #1. 데이터
 x = np.array([1,2,3])
 y = np.array([1,2,3])
@@ -12,20 +16,20 @@ y = np.array([1,2,3])
 # print(x.size()) # torch.Size([3])라고 나옴. .shape로도 똑같이 나옴. 토치는 보통 size로 씀
 
 # 2차원 행렬 형태로 만들어줘야함.
-x = torch.FloatTensor(x).unsqueeze(1) # (3,) -> (3,1)
+x = torch.FloatTensor(x).unsqueeze(1).to(DEVICE) # (3,) -> (3,1)
 # print(x)
 # tensor([[1.],
 #        [2.],
 #        [3.]])
 
-y = torch.FloatTensor(y).unsqueeze(1)   # (3,) -> (3,1)
+y = torch.FloatTensor(y).unsqueeze(1).to(DEVICE)   # (3,) -> (3,1)
 print(x.shape, y.shape)   # torch.Size([3, 1]) torch.Size([3, 1])
 print(x.size(), y.size()) # torch.Size([3, 1]) torch.Size([3, 1])
 
 #2. 모델구성
 # model = Sequential()
 # model.add(Dense(1, input_dim=1))
-model = nn.Linear(1, 1) # 인풋, 아웃풋  # y = xw + b
+model = nn.Linear(1, 1).to(DEVICE) # 인풋, 아웃풋  # y = xw + b
 
 #3. 컴파일, 훈련
 # model.compile(loss='mse', optimizer='adam')
@@ -67,14 +71,10 @@ def evaluate(model, criterion, x, y):
 loss2 = evaluate(model, criterion, x, y)
 print('최종 loss : ', loss2)
 
-results = model(torch.Tensor([[4]]))
+results = model(torch.Tensor([[4]]).to(DEVICE))
 print('4의 예측값 : :', results.item())    
 
-# 최종 loss :  3.7687350413762033e-06
-# 4의 예측값 : : 3.9961066246032715 
+# 데이터, 모델 / 투 토치. 디바이스
 
-# 최종 loss :  1.2894456169476598e-08
-# 4의 예측값 : : 3.9997718334198
+# 최종 loss :  3.069544618483633e-12
 
-# 최종 loss :  5.346350349100248e-07
-# 4의 예측값 : : 4.001467227935791
