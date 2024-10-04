@@ -12,16 +12,12 @@ print('torch : ', torch.__version__, '사용DEVICE : ', DEVICE)
 x = np.array([1,2,3])
 y = np.array([1,2,3])
 
-# x = torch.FloatTensor(x)
-# print(x.shape)  # torch.Size([3])
-# print(x.size()) # torch.Size([3])라고 나옴. .shape로도 똑같이 나옴. 토치는 보통 size로 씀
-
-# 2차원 행렬 형태로 만들어줘야함.
 x = torch.FloatTensor(x).unsqueeze(1).to(DEVICE) # (3,) -> (3,1) GPU로 돌리겠다!!!
-# print(x)
-# tensor([[1.],
-#        [2.],
-#        [3.]])
+print('스케일링 전 : ', x)
+
+x = (x - torch.mean(x)) / torch.std(x)
+print('스케일링 후 : ', x)
+
 
 y = torch.FloatTensor(y).unsqueeze(1).to(DEVICE)   # (3,) -> (3,1)
 print(x.shape, y.shape)   # torch.Size([3, 1]) torch.Size([3, 1])
@@ -74,8 +70,3 @@ print('최종 loss : ', loss2)
 
 results = model(torch.Tensor([[4]]).to(DEVICE))
 print('4의 예측값 : :', results.item())    
-
-# 데이터, 모델 / 투 토치. 디바이스
-
-# 최종 loss :  3.069544618483633e-12
-
