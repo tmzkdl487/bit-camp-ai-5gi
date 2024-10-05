@@ -1,3 +1,5 @@
+# torch01_2_gpu.py 복사
+
 import numpy as np
 import torch
 import torch.nn as nn
@@ -69,4 +71,8 @@ loss2 = evaluate(model, criterion, x, y)
 print('최종 loss : ', loss2)
 
 results = model(torch.Tensor([[4]]).to(DEVICE))
-print('4의 예측값 : :', results.item())    
+results2 = (results - torch.mean(x)) / torch.std(x)
+
+results3 = model(results2)
+
+print('4의 스케일링 후 예측값 : :', results.item())    

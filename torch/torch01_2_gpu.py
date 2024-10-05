@@ -1,3 +1,5 @@
+# torch01_2_gpu.py 복사
+
 import numpy as np
 import torch
 import torch.nn as nn
