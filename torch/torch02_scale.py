@@ -14,13 +14,13 @@ print('torch : ', torch.__version__, '사용DEVICE : ', DEVICE)
 x = np.array([1,2,3])
 y = np.array([1,2,3])
 
-x = torch.FloatTensor(x).unsqueeze(1).to(DEVICE) # (3,) -> (3,1) GPU로 돌리겠다!!!
+x2 = torch.FloatTensor(x).unsqueeze(1).to(DEVICE) # (3,) -> (3,1) GPU로 돌리겠다!!!
 print('스케일링 전 : ', x)
 
-x = (x - torch.mean(x)) / torch.std(x)
+x = (x2 - torch.mean(x2)) / torch.std(x2)
 print('스케일링 후 : ', x)
 
-
+'''
 y = torch.FloatTensor(y).unsqueeze(1).to(DEVICE)   # (3,) -> (3,1)
 print(x.shape, y.shape)   # torch.Size([3, 1]) torch.Size([3, 1])
 print(x.size(), y.size()) # torch.Size([3, 1]) torch.Size([3, 1])
@@ -70,9 +70,11 @@ def evaluate(model, criterion, x, y):
 loss2 = evaluate(model, criterion, x, y)
 print('최종 loss : ', loss2)
 
-results = model(torch.Tensor([[4]]).to(DEVICE))
-results2 = (results - torch.mean(x)) / torch.std(x)
+x_pre = (torch.Tensor([[4]]).to(DEVICE) - torch.mean(x2)) / torch.std(x2)
+print(x_pre)
 
-results3 = model(results2)
+result = model(x_pre)     # model의 가중치가 최상의 가중치가 저장되어 있어 tensor형태의 값으로 넣어줌
 
-print('4의 스케일링 후 예측값 : :', results.item())    
+print("4의 예측값 :", result)              # 4의 예측값 : tensor([[3.9947]], grad_fn=<AddmmBackward0>)      # item 미사용시 gradient도 나옴 
+print("4의 예측값 :", result.item()) 
+'''
