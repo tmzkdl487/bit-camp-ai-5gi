@@ -9,7 +9,7 @@ USE_CUDA = torch.cuda.is_available()
 DEVICE = torch.device('cuda:0' if USE_CUDA else 'cpu')
 print('torch:', torch.__version__, '사용자DEVICE:', DEVICE)
 
-path = './study/torch/_data/'
+path = 'C:/ai5/_data/torch이미지/'
 train_dataset = FashionMNIST(path, train=True, download=True)
 test_dataset = FashionMNIST(path, train=False, download=True)
 
