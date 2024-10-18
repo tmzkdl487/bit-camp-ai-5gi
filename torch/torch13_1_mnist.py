@@ -153,7 +153,7 @@ def train(model, criterion, optimizer, loader):
         y_predict = torch.argmax(hypothesis, 1)
         acc = (y_predict == y_batch).float().mean()
         
-        epoch_acc += acc
+        epoch_acc += acc.item()
         
     return epoch_loss / len(loader), epoch_acc / len(loader) 
 
