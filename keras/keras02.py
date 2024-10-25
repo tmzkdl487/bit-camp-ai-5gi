@@ -12,7 +12,7 @@ model.add(Dense(1, input_dim=1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer= 'adam')
-model.fit(x, y, epochs=10000)
+model.fit(x, y, epochs=100)
 
 #4. 평가, 예측
 loss = model.evaluate(x,y)
@@ -28,3 +28,5 @@ print("7의 예측값 : ", result)
 # 7의 예측값 :  [[1.0085083]
 # 7의 예측값 :  [[1.000017 ]
 # 7의 예측값 :  [[1.]
+# 7의 예측값 :  [[1.0064318]
+# 7의 예측값 :  [[ -1.4683859]
