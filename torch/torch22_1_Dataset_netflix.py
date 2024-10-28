@@ -1,5 +1,21 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import random
+
+random.seed(333)
+np.random.seed(333)
+torch.manual_seed(333)
+torch.cuda.manual_seed(333)
+
+# USE_CUDA = torch.cuda.is_available()
+# DEVICE = torch.device('cuda:0' if USE_CUDA else 'cpu')
+# print('torch :', torch.__version__, '사용자DEVICE: ', DEVICE)
+
+DEVICE = 'cuda:0' if torch.cuda.is_available else 'cpu'
+print(DEVICE)
 
 path = 'C:/ai5/_data/kaggle/netflix/'
 train_csv = pd.read_csv(path + 'train.csv')
@@ -74,9 +90,9 @@ class Custom_Dataset(Dataset):
         return x, y
 
 aaa = Custom_Dataset()
-print(aaa)          # <__main__.Custom_Dataset object at 0x000002573BC10830>
-print(type(aaa))    # <class '__main__.Custom_Dataset'>
-print(aaa[0])       
+# print(aaa)          # <__main__.Custom_Dataset object at 0x000002573BC10830>
+# print(type(aaa))    # <class '__main__.Custom_Dataset'>
+# print(aaa[0])       
 # (array([[0.11470588, 0.11242604, 0.11411411],
 #        [0.12647059, 0.12130178, 0.12612613],
 #        [0.11764706, 0.10946746, 0.11411411],
@@ -109,16 +125,72 @@ print(aaa[0])
 #        [0.03235294, 0.02662722, 0.03303303]]), 94)
 # 세어보면 30개. 잘 나왔다.
 
-print(aaa[0][0].shape)  # (30, 3)
-print(aaa[0][1])        # 94
-print(len(aaa))         # 937
+# print(aaa[0][0].shape)  # (30, 3)
+# print(aaa[0][1])        # 94
+# print(len(aaa))         # 937
 # print(aaa[937])         # 936번째까지 있지. 936번째 놈이 끝! IndexError: index 967 is out of bounds for axis 0 with size 967
 
 ##### x는 (937, 30, 3), y는 (937, 1)
 
 train_loader = DataLoader(aaa, batch_size= 32)
 
-aaa = iter(train_loader)
-bbb = next(aaa)
-print(bbb)
-print(bbb[0].size())
+# aaa = iter(train_loader)
+# bbb = next(aaa)
+# print(bbb)
+# print(bbb[0].size())    # torch.Size([32, 30, 3])
+
+#2. 모델
+class RNN(nn.Module):
+    def __init__(self):
+        super(RNN, self).__init__()
+        
+        self.rnn = nn.RNN(input_size=3, 
+                          hidden_size=64, 
+                          num_layers= 5,
+                          batch_first=True,                          
+                          )
+        self.fc1 = nn.Linear(in_features=30*64, out_features=32)
+        self.fc2 = nn.Linear(in_features=32,  out_features=1)
+        
+        self.relu = nn.ReLU()
+        
+    def forward(self, x, h0):
+        x, hn = self.rnn(x, h0)
+        
+        x = torch.reshape(x, (x.shape[0], -1))
+        
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = self.fc2(x)
+        
+        return x
+    
+model = RNN().to(DEVICE)
+
+#3. 컴파일, 훈련
+
+from torch.optim import Adam
+optim = Adam(params=model.parameters(), lr=0.001)
+
+import tqdm 
+
+for epoch in range(1, 201):
+    iterator = tqdm.tqdm(train_loader)
+    for x, y in iterator:
+        optim.zero_grad()
+        
+        h0 = torch.zeros(5, x.shape[0], 64).to(DEVICE) # (num_layers, batch_size, hidden_size) = (5, 32, 64)
+        
+        hypothesis = model(x.type(torch.FloatTensor).to(DEVICE), h0)
+        
+        loss = nn.MSELoss()(hypothesis, y.type(torch.FloatTensor).to(DEVICE))
+
+        loss.backward()
+        optim.step()
+        
+        iterator.set_description(f'epoch:{epoch} loss:{loss.item()}')
+
+save_path = 'C:/ai5/_save/torch/'
+torch.save(model.state_dict(), save_path + 't22.pth')
+
+        
